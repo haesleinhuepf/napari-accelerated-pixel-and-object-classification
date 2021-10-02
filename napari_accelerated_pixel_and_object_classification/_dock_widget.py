@@ -214,7 +214,7 @@ class ObjectSegmentation(QWidget):
 
         print("Training done. Applying model...")
 
-        result = clf.predict(feature_definition, images)
+        result = np.asarray(clf.predict(feature_definition, images))
 
         print("Applying / prediction done.")
 
@@ -243,7 +243,7 @@ class ObjectSegmentation(QWidget):
 
         clf = ObjectSegmenter(opencl_filename=filename)
 
-        result = clf.predict(image=images)
+        result = np.asarray(clf.predict(image=images))
 
         print("Applying / prediction done.")
 
