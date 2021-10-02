@@ -35,7 +35,7 @@ def Train_pixel_classifier(
     clf = PixelClassifier(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth)
     clf.train(feature_stack, annotation, image)
 
-    result = clf.predict(feature_stack, image)
+    result = clf.predict(features=feature_stack, image=image)
     return result
 
 def Apply_pixel_classification(image: "napari.types.ImageData",
@@ -63,7 +63,7 @@ def Train_pixel_classifier_from_visible_image_layers(
     clf = PixelClassifier(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth)
     clf.train(feature_stack, annotation, image)
 
-    result = clf.predict(feature_stack, image)
+    result = clf.predict(features=feature_stack, image=image)
     return result
 
 def Apply_pixel_classification_to_visible_image_layers(
@@ -122,7 +122,7 @@ def Train_object_segmentation_from_visible_image_layers(
     clf = ObjectSegmenter(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth, positive_class_identifier=annotated_object_intensity)
     clf.train(feature_stack, annotation, image)
 
-    result = clf.predict(feature_stack, image)
+    result = clf.predict(features=feature_stack, image=image)
     return result
 
 def Apply_object_segmentation_to_visible_image_layers(
