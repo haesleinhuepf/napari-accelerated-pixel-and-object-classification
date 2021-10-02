@@ -103,6 +103,10 @@ class ObjectSegmentation(QWidget):
         # Train button
         button = QPushButton("Train")
         def train_clicked(*arg, **kwargs):
+            if self.get_selected_annotation() is None:
+                warnings.warn("No ground truth annotation selected!")
+                return
+
             self.train(
                 [i.data for i in self.get_selected_images()],
                 self.get_selected_annotation().data,
@@ -258,12 +262,20 @@ class ObjectSegmentation(QWidget):
 
 
     def update_label_list(self):
+        selected_layer = self.get_selected_annotation()
+        selected_index = -1
+
         self._available_labels = []
         self.label_list.clear()
+        i = 0
         for l in self.viewer.layers:
             if isinstance(l, napari.layers.Labels):
                 self._available_labels.append(l)
+                if l == selected_layer:
+                    selected_index = i
                 self.label_list.addItem(l.name)
+                i = i + 1
+        self.label_list.setCurrentIndex(selected_index)
 
     def get_selected_annotation(self):
         index = self.label_list.currentIndex()
@@ -272,6 +284,9 @@ class ObjectSegmentation(QWidget):
         return None
 
     def update_image_list(self):
+        selected_images = self.get_selected_images()
+        print("selected images was:", selected_images)
+
         self._available_images = []
         self.image_list.clear()
         for l in self.viewer.layers:
@@ -279,9 +294,16 @@ class ObjectSegmentation(QWidget):
                 item = QListWidgetItem(l.name)
                 self._available_images.append(l)
                 self.image_list.addItem(item)
+                if l in selected_images:
+                    item.setSelected(True)
+
+        selected_images = self.get_selected_images()
+        print("selected images is:", selected_images)
 
     def get_selected_images(self):
         images = []
+        if not hasattr(self, "_available_images"):
+            return images
         for i, image in enumerate(self._available_images):
             item = self.image_list.item(i)
             if item.isSelected():
@@ -289,15 +311,13 @@ class ObjectSegmentation(QWidget):
         return images
 
     def _on_selection(self, event=None):
-        # patch events # doesn't work at the moment...
-        for layer in self.viewer.layers:
-            layer.events.data.disconnect(self.redraw)
+        num_labels_in_viewer = len([l for l in self.viewer.layers if isinstance(l, napari.layers.Labels)])
+        if num_labels_in_viewer != self.label_list.size():
+            self.update_label_list()
 
-        # redraw when layer selection has changed
-        self.redraw(force_redraw=True)
-
-    def redraw(self, event=None, force_redraw : bool = False):
-        pass
+        num_images_in_viewer = len([l for l in self.viewer.layers if isinstance(l, napari.layers.Image)])
+        if num_images_in_viewer != self.image_list.size():
+            self.update_image_list()
 
 class FeatureSelector(QWidget):
     def __init__(self, feature_definition:str):
@@ -325,7 +345,7 @@ class FeatureSelector(QWidget):
         for f, f_short in zip(self.available_features, self.available_features_short_names):
             table.layout().addWidget(QLabel(f_short), row, 0)
             for i, r in enumerate(self.radii):
-                table.layout().addWidget(self._make_checkbox("", f, (f + "=" + str(r)) in self.feature_definition), row, i + 1)
+                table.layout().addWidget(self._make_checkbox("", f + "=" + str(r), (f + "=" + str(r)) in self.feature_definition), row, i + 1)
             row = row + 1
 
         self.layout().addWidget(table)
@@ -340,9 +360,9 @@ class FeatureSelector(QWidget):
 
         def check_the_box(*args, **kwargs):
             if checkbox.isChecked():
-                self._remove_feature(feature)
-            else:
                 self._add_feature(feature)
+            else:
+                self._remove_feature(feature)
 
         checkbox.stateChanged.connect(check_the_box)
         return checkbox
@@ -352,6 +372,7 @@ class FeatureSelector(QWidget):
         print(self.feature_definition)
 
     def _add_feature(self, feature):
+        print("adding: " + feature)
         self.feature_definition = self.feature_definition + " " + feature + " "
         print(self.feature_definition)
 
