@@ -7,3 +7,4 @@ except ImportError:
 
 
 from ._function import napari_experimental_provide_function
+from ._dock_widget import napari_experimental_provide_dock_widget
