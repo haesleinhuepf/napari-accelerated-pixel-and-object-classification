@@ -97,7 +97,8 @@ class ObjectSegmentation(QWidget):
         temp.layout().addWidget(num_trees_spinner)
         training_widget.layout().addWidget(temp)
 
-        self.label_memory_consumption = QLabel("Estd. memory consumption:")
+        self.label_memory_consumption = QLabel("")
+        training_widget.layout().addWidget(self.label_memory_consumption)
 
         # Train button
         button = QPushButton("Train")
@@ -162,6 +163,20 @@ class ObjectSegmentation(QWidget):
         # Spacer
         verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         self.layout().addItem(verticalSpacer)
+
+        # ----------------------------------------------------------
+        # Timer for updating memory consumption
+        self.timer = QTimer()
+        self.timer.setInterval(500)
+
+        @self.timer.timeout.connect
+        def update_layer(*_):
+            self.update_memory_consumption()
+            if not self.isVisible():
+                self.timer.stop()
+
+        self.timer.start()
+
 
     def train(self, images, annotation, object_annotation_value, feature_definition, num_max_depth, num_trees, filename):
         print("train")
@@ -231,6 +246,16 @@ class ObjectSegmentation(QWidget):
         short_filename = filename.split("/")[-1]
 
         self._add_to_viewer("Result of " + short_filename, result)
+
+    def update_memory_consumption(self):
+        number_of_pixels = np.sum(np.prod(i.data.shape) for i in self.get_selected_images())
+        number_of_features = len(self.feature_selector.getFeatures().split(" "))
+        number_of_bytes_per_pixel = 4
+
+        bytes = number_of_pixels * number_of_bytes_per_pixel * number_of_features
+        text = "{bytes:.1f} MBytes".format(bytes=bytes / 1024 / 1024)
+        self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
+
 
     def update_label_list(self):
         self._available_labels = []
