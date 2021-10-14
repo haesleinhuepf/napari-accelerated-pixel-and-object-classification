@@ -13,10 +13,8 @@ from qtpy.QtCore import QTimer, QRect
 from magicgui.widgets import FileEdit
 from magicgui.types import FileDialogMode
 
-import pyqtgraph as pg
 import numpy as np
 import napari
-from magicgui import magicgui
 
 from apoc import PredefinedFeatureSet, ObjectSegmenter
 
@@ -335,7 +333,8 @@ class FeatureSelector(QWidget):
         table.setLayout(QGridLayout())
         table.layout().addWidget(QLabel("sigma"), 0, 0)
         table.layout().setSpacing(0)
-        table.layout().setMargin(0)
+        if hasattr(table.layout(), "setMargin"):
+            table.layout().setMargin(0)
 
         for i, r in enumerate(self.radii):
             table.layout().addWidget(QLabel(str(r)), 0, i + 1)
