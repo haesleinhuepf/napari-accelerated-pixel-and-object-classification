@@ -36,7 +36,7 @@ In case of issues in napari, make sure these dependencies are installed properly
 
 ## Usage
 
-### Usage: Object and Semantic-segmentation
+### Usage: Object and Semantic Segmentation
 
 Starting point is napari with at least one image layer and one labels layer (your annotation).
 
