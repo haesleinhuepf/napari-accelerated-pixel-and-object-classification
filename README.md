@@ -40,7 +40,7 @@ In case of issues in napari, make sure these dependencies are installed properly
 
 Starting point is napari with at least one image layer and one labels layer (your annotation).
 
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/object_segmentation_starting_point.png)
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_segmentation_starting_point.png)
 
 You find Object and Semantic Segmentation in the main plugins menu:
 
