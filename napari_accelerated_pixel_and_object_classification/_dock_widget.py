@@ -32,7 +32,7 @@ class ObjectSegmentation(QWidget):
 
         # ----------------------------------------------------------
         # Image selection list
-        self.layout().addWidget(QLabel("Select image[s]"))
+        self.layout().addWidget(QLabel("Select image[s]/channels[s] used for training"))
         self.image_list = QListWidget()
         self.image_list.setSelectionMode(
             QAbstractItemView.ExtendedSelection
