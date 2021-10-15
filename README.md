@@ -38,11 +38,15 @@ In case of issues in napari, make sure these dependencies are installed properly
 
 ### Usage: Object and Semantic-segmentation
 
-In napari, you find Object and Semantic Segmentation in the main plugins menu:
+Starting point is napari with at least one image layer and one labels layer (your annotation).
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/object_segmentation_starting_point.png)
+
+You find Object and Semantic Segmentation in the main plugins menu:
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
 
-When clicking one of the first two, the following graphical user interface will show up. Assuming you have at least one image layer and one labels layer (your annotation) in napari, you can segment the image.
+When clicking one of the first two, the following graphical user interface will show up.
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_and_semantic_segmentation.png)
 
