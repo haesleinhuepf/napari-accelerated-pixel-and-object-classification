@@ -80,3 +80,5 @@ target/
 /venv/
 /.idea/
 temp.cl
+
+/*.cl
