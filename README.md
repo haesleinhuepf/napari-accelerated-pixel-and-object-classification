@@ -35,7 +35,61 @@ In case of issues in napari, make sure these dependencies are installed properly
     pip install apoc
 
 ## Usage
-[documentation work in progress]
+
+### Usage: Object and Semantic-segmentation
+
+In napari, you find Object and Semantic Segmentation in the main plugins menu:
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
+
+When clicking one of the first two, the following graphical user interface will show up. Assuming you have at least one image layer and one labels layer (your annotation) in napari, you can segment the image.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_and_semantic_segmentation.png)
+
+1. Choose one or multiple images to train on. These images will be considered as multiple channels. Thus, they need to be spatially correlated. 
+   Training from multiple images showing different scenes is not (yet) supported from the graphical user interface. Check out [this notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/demp_pixel_classifier_continue_training.ipynb) if you want to train from multiple image-annotation pairs.
+2. Select a file where the classifier should be saved. If the file exists already, it will be overwritten.
+3. Select the ground-truth annotation labels layer. 
+4. Select which label corresponds to foreground (not available in Semantic Segmentation)
+5. Select the feature images that should be considered for segmentation. If segmentation appears pixelated, try increasing the selected sigma values and untick `Consider original image`.
+6. Tree depth and number of trees allow you to fine-tune how to deal with manifold regions of different characteristics. The higher these numbers, the longer segmentation will take. In case you use many images and many features, high depth and number of trees might be necessary. (See also `max_depth` and `n_estimators` in the [scikit-learn documentation of the Random Forest Classifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html).
+7. The estimation of memory consumption allows you to tune the configuration to your GPU-hardware. Also consider the GPU-hardware of others who want to use your classifier.
+8. Click on Run when you're done with configuring. If the segmentation doesn't fit after the first execution, consider fine-tuning the ground-truth annotation and try again.
+
+A successful segmentation can for example look like this:
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_segmentation_result.png)
+
+After your classifier has been trained successfully, click on the "Application / Prediction" tab. If you apply the classifier again, python code will be generated. 
+You can use this code for example to apply the same classifier to a folder of images. If you're new to this, check out [this notebook](https://github.com/BiAPoL/Bio-image_Analysis_with_Python/blob/main/image_processing/12_process_folders.ipynb).
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/code_generation.png)
+
+
+### Usage: Object classification
+
+Click the menu `Plugins > Segmentation (Accelerated Pixel and Object Classification) > Object classifier`. 
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
+
+This user interface will be shown:
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classifier_gui.png)
+
+1. The image layer will be used for intensity based feature extraction (see below).
+2. The labels layer should be contain the segmentation of objects that should be classified. 
+   You can use the Object Segmenter explained above to create this layer.
+3. The annotation layer should contain manual annotations of object classes. 
+   You can draw lines crossing single and multiple objects of the same kind. 
+   For example draw a line through some elongated objects with label "1" and another line through some rather roundish objects with label "2".
+   If these lines touch the background, that will be ignored.
+4. Tree depth and number of trees allow you to fine-tune how to deal with manifold objects of different characteristics. The higher these numbers, the longer classification will take. In case you use many features, high depth and number of trees might be necessary. (See also `max_depth` and `n_estimators` in the [scikit-learn documentation of the Random Forest Classifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html).
+5. Select the right features for training. For example, for differentiating objects according to their shape as suggested above, select "shape".
+   The features are extracted using clEsperanto and are shown by example in [this notebook](https://github.com/clEsperanto/pyclesperanto_prototype/blob/master/demo/tissues/parametric_maps.ipynb).
+6. Click on the `Run` button. If classification doesn't perform well in the first attempt, try changing selected features.  
+
+If classification worked well, it may for example look like this. Note the two thick lines which were drawn to annotate elongated and roundish objects with brown and cyan:
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classification_result.png)
+
+
+### Usage: Under-the-hood functions
 
 Open an image in napari and add a labels layer. Annotate foreground and background with two different label identifiers. You can also add a third, e.g. a membrane-like region in between to improve segmentation quality.
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/img.png)
