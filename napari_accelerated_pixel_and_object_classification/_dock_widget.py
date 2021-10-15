@@ -18,7 +18,9 @@ import numpy as np
 import napari
 
 from apoc import PredefinedFeatureSet, ObjectSegmenter, PixelClassifier
+from napari_tools_menu import register_dock_widget
 
+@register_dock_widget(menu="Segmentation > Object segmentation (APOC)")
 class ObjectSegmentation(QWidget):
     def __init__(self, napari_viewer, classifier_class=ObjectSegmenter):
         super().__init__()
@@ -327,6 +329,7 @@ class ObjectSegmentation(QWidget):
         if num_images_in_viewer != self.image_list.size():
             self.update_image_list()
 
+@register_dock_widget(menu="Segmentation > Semantic segmentation (APOC)")
 class SemanticSegmentation(ObjectSegmentation):
     def __init__(self, napari_viewer):
         super().__init__(napari_viewer, classifier_class=PixelClassifier)
@@ -392,6 +395,7 @@ class FeatureSelector(QWidget):
     def getFeatures(self):
         return self.feature_definition.replace("  ", " ").strip(" ")
 
+@register_dock_widget(menu="Classification > Object classification (APOC)")
 class ObjectClassifier(QWidget):
     def __init__(self, napari_viewer):
         super().__init__()
