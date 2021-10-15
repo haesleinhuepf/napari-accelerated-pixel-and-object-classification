@@ -61,10 +61,12 @@ When clicking one of the first two, the following graphical user interface will 
 8. Click on Run when you're done with configuring. If the segmentation doesn't fit after the first execution, consider fine-tuning the ground-truth annotation and try again.
 
 A successful segmentation can for example look like this:
+
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_segmentation_result.png)
 
 After your classifier has been trained successfully, click on the "Application / Prediction" tab. If you apply the classifier again, python code will be generated. 
 You can use this code for example to apply the same classifier to a folder of images. If you're new to this, check out [this notebook](https://github.com/BiAPoL/Bio-image_Analysis_with_Python/blob/main/image_processing/12_process_folders.ipynb).
+
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/code_generation.png)
 
 
@@ -75,6 +77,7 @@ Click the menu `Plugins > Segmentation (Accelerated Pixel and Object Classificat
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
 
 This user interface will be shown:
+
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classifier_gui.png)
 
 1. The image layer will be used for intensity based feature extraction (see below).
@@ -90,6 +93,7 @@ This user interface will be shown:
 6. Click on the `Run` button. If classification doesn't perform well in the first attempt, try changing selected features.  
 
 If classification worked well, it may for example look like this. Note the two thick lines which were drawn to annotate elongated and roundish objects with brown and cyan:
+
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classification_result.png)
 
 
