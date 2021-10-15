@@ -110,6 +110,8 @@ class ObjectSegmentation(QWidget):
                 warnings.warn("No ground truth annotation selected!")
                 return
 
+
+
             self.train(
                 [i.data for i in self.get_selected_images()],
                 self.get_selected_annotation().data,
@@ -338,7 +340,7 @@ class FeatureSelector(QWidget):
         self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"]
         self.available_features_short_names = ["Gauss", "DoG", "LoG"]
 
-        self.radii = [1, 2, 3, 4, 5, 10, 15, 25, 50]
+        self.radii = [0.3, 0.5, 1, 2, 3, 4, 5, 10, 15, 25]
 
         # Headline
         table = QWidget()
@@ -379,7 +381,7 @@ class FeatureSelector(QWidget):
         return checkbox
 
     def _remove_feature(self, feature):
-        self.feature_definition = self.feature_definition.replace(" " + feature + " ", "")
+        self.feature_definition = " " + (self.feature_definition.replace(" " + feature + " ", " ")).strip() + " "
         print(self.feature_definition)
 
     def _add_feature(self, feature):
