@@ -16,13 +16,15 @@ from magicgui.types import FileDialogMode
 import numpy as np
 import napari
 
-from apoc import PredefinedFeatureSet, ObjectSegmenter
+from apoc import PredefinedFeatureSet, ObjectSegmenter, PixelClassifier
 
 class ObjectSegmentation(QWidget):
-    def __init__(self, napari_viewer):
+    def __init__(self, napari_viewer, classifier_class=ObjectSegmenter):
         super().__init__()
         self.viewer = napari_viewer
         napari_viewer.layers.selection.events.changed.connect(self._on_selection)
+
+        self.classifier_class = classifier_class
 
         self.current_annotation = None
 
@@ -47,7 +49,7 @@ class ObjectSegmentation(QWidget):
         filename_edit = FileEdit(
             mode=FileDialogMode.OPTIONAL_FILE,
             filter='*.cl',
-            value="object_segmenter.cl")
+            value=str(self.classifier_class.__name__) + ".cl")
         self.layout().addWidget(filename_edit.native)
 
         # ----------------------------------------------------------
@@ -69,7 +71,9 @@ class ObjectSegmentation(QWidget):
         num_object_annotation_spinner.setMaximumWidth(40)
         num_object_annotation_spinner.setMinimum(1)
         num_object_annotation_spinner.setValue(2)
-        temp.layout().addWidget(num_object_annotation_spinner)
+        if self.classifier_class != PixelClassifier:
+            print("classifier ", self.classifier_class)
+            temp.layout().addWidget(num_object_annotation_spinner)
         training_widget.layout().addWidget(temp)
 
         # Features
@@ -137,8 +141,8 @@ class ObjectSegmentation(QWidget):
             if ", " in image_names:
                 image_names = "[" + image_names + "]"
             text_area.setPlainText("# python code to apply this object segmenter\n"
-                                   "from apoc import ObjectSegmenter\n\n" +
-                                   "segmenter = ObjectSegmenter(opencl_filename='" + filename + "')\n\n" +
+                                   "from apoc import " + str(self.classifier_class.__name__) + "\n\n" +
+                                   "segmenter = " + str(self.classifier_class.__name__) + "(opencl_filename='" + filename + "')\n\n" +
                                    "result = segmenter.predict(image=" + image_names + ")")
 
             self.predict(
@@ -181,7 +185,7 @@ class ObjectSegmentation(QWidget):
 
 
     def train(self, images, annotation, object_annotation_value, feature_definition, num_max_depth, num_trees, filename):
-        print("train")
+        print("train " + str(self.classifier_class.__name__))
         print("num images", len(images))
         print("object annotation value", object_annotation_value)
         print("features", feature_definition)
@@ -200,11 +204,13 @@ class ObjectSegmentation(QWidget):
         if len(images) == 1:
             images = images[0]
 
-        clf = ObjectSegmenter(
+        clf = self.classifier_class(
             opencl_filename=filename,
             num_ensembles=num_trees,
-            max_depth=num_max_depth,
-            positive_class_identifier=object_annotation_value)
+            max_depth=num_max_depth)
+
+        if hasattr(clf, "positive_class_identifier"):
+            clf.positive_class_identifier = object_annotation_value
 
         print("annotation shape", annotation.shape)
 
@@ -239,7 +245,7 @@ class ObjectSegmentation(QWidget):
         if len(images) == 1:
             images = images[0]
 
-        clf = ObjectSegmenter(opencl_filename=filename)
+        clf = self.classifier_class(opencl_filename=filename)
 
         result = np.asarray(clf.predict(image=images))
 
@@ -317,6 +323,10 @@ class ObjectSegmentation(QWidget):
         if num_images_in_viewer != self.image_list.size():
             self.update_image_list()
 
+class SemanticSegmentation(ObjectSegmentation):
+    def __init__(self, napari_viewer):
+        super().__init__(napari_viewer, classifier_class=PixelClassifier)
+
 class FeatureSelector(QWidget):
     def __init__(self, feature_definition:str):
         super().__init__()
@@ -384,4 +394,4 @@ class FeatureSelector(QWidget):
 @napari_hook_implementation
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
-    return [ObjectSegmentation]
+    return [ObjectSegmentation, SemanticSegmentation]
