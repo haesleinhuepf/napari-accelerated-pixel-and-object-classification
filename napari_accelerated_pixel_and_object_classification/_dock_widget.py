@@ -1,6 +1,7 @@
 import time
 import warnings
 
+import apoc
 from qtpy.QtWidgets import QSpacerItem, QSizePolicy
 from napari_plugin_engine import napari_hook_implementation
 from qtpy.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabel, QSpinBox, QCheckBox
@@ -204,6 +205,7 @@ class ObjectSegmentation(QWidget):
         if len(images) == 1:
             images = images[0]
 
+        apoc.erase_classifier(filename)
         clf = self.classifier_class(
             opencl_filename=filename,
             num_ensembles=num_trees,
