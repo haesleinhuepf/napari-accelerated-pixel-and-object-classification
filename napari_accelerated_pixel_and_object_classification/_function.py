@@ -4,7 +4,8 @@ import numpy as np
 from napari_plugin_engine import napari_hook_implementation
 
 import napari
-
+from napari_time_slicer import time_slicer
+from napari_tools_menu import register_function
 
 @napari_hook_implementation
 def napari_experimental_provide_function():
@@ -38,6 +39,8 @@ def Train_pixel_classifier(
     result = clf.predict(features=feature_stack, image=image)
     return result
 
+@register_function(menu="Segmentation > Semantic segmentation (apply pretrained, APOC)")
+@time_slicer
 def Apply_pixel_classification(image: "napari.types.ImageData",
                              model_filename : str = "pixel_classifier.cl") -> "napari.types.LabelsData":
 
@@ -76,6 +79,8 @@ def Apply_pixel_classification_to_visible_image_layers(
     result = clf.predict(image=image)
     return result
 
+@register_function(menu="Segmentation > Object segmentation (apply pretrained, APOC)")
+@time_slicer
 def Train_object_segmentation(
         image: "napari.types.ImageData",
         annotation : "napari.types.LabelsData",
@@ -204,6 +209,8 @@ def Train_object_classifier(image: "napari.types.ImageData",
     result = clf.predict(labels, image)
     return result
 
+@register_function(menu="Segmentation > Object classification (apply pretrained, APOC)")
+@time_slicer
 def Apply_object_classification(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
 
