@@ -4,7 +4,8 @@ import numpy as np
 from napari_plugin_engine import napari_hook_implementation
 
 import napari
-
+from napari_time_slicer import time_slicer
+from napari_tools_menu import register_function
 
 @napari_hook_implementation
 def napari_experimental_provide_function():
@@ -22,7 +23,7 @@ def napari_experimental_provide_function():
 def Train_pixel_classifier(
         image: "napari.types.ImageData",
         annotation : "napari.types.LabelsData",
-        model_filename : str = "pixel_classifier.cl",
+        model_filename : str = "PixelClassifier.cl",
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
@@ -38,8 +39,11 @@ def Train_pixel_classifier(
     result = clf.predict(features=feature_stack, image=image)
     return result
 
+@register_function(menu="Segmentation > Semantic segmentation (apply pretrained, APOC)")
+@time_slicer
 def Apply_pixel_classification(image: "napari.types.ImageData",
-                             model_filename : str = "pixel_classifier.cl") -> "napari.types.LabelsData":
+                               model_filename : str = "PixelClassifier.cl",
+                               viewer: napari.Viewer = None) -> "napari.types.LabelsData":
 
     clf = PixelClassifier(opencl_filename=model_filename)
     result = clf.predict(image=image)
@@ -47,7 +51,7 @@ def Apply_pixel_classification(image: "napari.types.ImageData",
 
 def Train_pixel_classifier_from_visible_image_layers(
         annotation : "napari.types.LabelsData",
-        model_filename : str = "pixel_classifier.cl",
+        model_filename : str = "PixelClassifier.cl",
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
@@ -67,7 +71,7 @@ def Train_pixel_classifier_from_visible_image_layers(
     return result
 
 def Apply_pixel_classification_to_visible_image_layers(
-        model_filename : str = "pixel_classifier.cl",
+        model_filename : str = "PixelClassifier.cl",
         napari_viewer : napari.Viewer = None
 ) -> "napari.types.LabelsData":
     image = [layer.data for layer in napari_viewer.layers if (isinstance(layer, napari.layers.Image) and layer.visible)]
@@ -79,7 +83,7 @@ def Apply_pixel_classification_to_visible_image_layers(
 def Train_object_segmentation(
         image: "napari.types.ImageData",
         annotation : "napari.types.LabelsData",
-        model_filename : str = "object_segmenter.cl",
+        model_filename : str = "ObjectSegmenter.cl",
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
@@ -96,9 +100,12 @@ def Train_object_segmentation(
     result = clf.predict(feature_stack, image)
     return result
 
-def Apply_object_segmentation(image: "napari.types.ImageData",
-                             model_filename : str = "object_segmenter.cl") -> "napari.types.LabelsData":
 
+@register_function(menu="Segmentation > Object segmentation (apply pretrained, APOC)")
+@time_slicer
+def Apply_object_segmentation(image: "napari.types.ImageData",
+                              model_filename : str = "ObjectSegmenter.cl",
+                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
     clf = ObjectSegmenter(opencl_filename=model_filename)
     result = clf.predict(image=image)
     return result
@@ -126,7 +133,7 @@ def Train_object_segmentation_from_visible_image_layers(
     return result
 
 def Apply_object_segmentation_to_visible_image_layers(
-        model_filename : str = "object_segmenter.cl",
+        model_filename : str = "ObjectSegmenter.cl",
         napari_viewer : napari.Viewer = None
 ) -> "napari.types.LabelsData":
     image = [layer.data for layer in napari_viewer.layers if (isinstance(layer, napari.layers.Image) and layer.visible)]
@@ -149,7 +156,7 @@ def Connected_component_labeling(labels: "napari.types.LabelsData", object_class
 def Train_object_classifier(image: "napari.types.ImageData",
         labels : "napari.types.LabelsData",
         annotation : "napari.types.LabelsData",
-        model_filename : str = "label_classifier.cl",
+        model_filename : str = "ObjectClassifier.cl",
         max_depth : int = 2,
         num_ensembles : int = 10,
         area : bool = True,
@@ -204,10 +211,12 @@ def Train_object_classifier(image: "napari.types.ImageData",
     result = clf.predict(labels, image)
     return result
 
+@register_function(menu="Segmentation > Object classification (apply pretrained, APOC)")
+@time_slicer
 def Apply_object_classification(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
-
-                             model_filename : str = "label_classifier.cl") -> "napari.types.LabelsData":
+                             model_filename : str = "ObjectClassifier.cl",
+                             viewer: napari.Viewer = None) -> "napari.types.LabelsData":
 
     clf = ObjectClassifier(opencl_filename=model_filename)
     result = clf.predict(labels, image)

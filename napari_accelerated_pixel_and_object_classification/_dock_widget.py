@@ -112,11 +112,9 @@ class ObjectSegmentation(QWidget):
                 warnings.warn("No ground truth annotation selected!")
                 return
 
-
-
             self.train(
-                [i.data for i in self.get_selected_images()],
-                self.get_selected_annotation().data,
+                self.get_selected_images_data(),
+                self.get_selected_annotation_data(),
                 num_object_annotation_spinner.value(),
                 self.feature_selector.getFeatures(),
                 num_max_depth_spinner.value(),
@@ -151,7 +149,7 @@ class ObjectSegmentation(QWidget):
                                    "result = segmenter.predict(image=" + image_names + ")")
 
             self.predict(
-                [i.data for i in self.get_selected_images()],
+                self.get_selected_images_data(),
                 filename
             )
 
@@ -262,7 +260,7 @@ class ObjectSegmentation(QWidget):
         self._add_to_viewer("Result of " + short_filename, result)
 
     def update_memory_consumption(self):
-        number_of_pixels = np.sum(np.prod(i.data.shape) for i in self.get_selected_images())
+        number_of_pixels = np.sum(np.prod(i.shape) for i in self.get_selected_images_data())
         number_of_features = len(self.feature_selector.getFeatures().split(" "))
         number_of_bytes_per_pixel = 4
 
@@ -283,7 +281,10 @@ class ObjectSegmentation(QWidget):
                 self._available_labels.append(l)
                 if l == selected_layer:
                     selected_index = i
-                self.label_list.addItem(l.name)
+                suffix = ""
+                if len(l.data.shape) == 4:
+                    suffix = " (current timepoint)"
+                self.label_list.addItem(l.name + suffix)
                 i = i + 1
         self.label_list.setCurrentIndex(selected_index)
 
@@ -293,6 +294,18 @@ class ObjectSegmentation(QWidget):
             return self._available_labels[index]
         return None
 
+    def get_selected_annotation_data(self):
+        value = self.get_selected_annotation()
+        if value is None:
+            return None
+        value = value.data
+        if len(value.shape) == 4:
+            current_time = self.viewer.dims.current_step[0]
+            value = value[current_time]
+            if value.shape[0] == 1:
+                value = value[0]
+        return value
+
     def update_image_list(self):
         selected_images = self.get_selected_images()
         print("selected images was:", selected_images)
@@ -301,7 +314,10 @@ class ObjectSegmentation(QWidget):
         self.image_list.clear()
         for l in self.viewer.layers:
             if isinstance(l, napari.layers.Image):
-                item = QListWidgetItem(l.name)
+                suffix = ""
+                if len(l.data.shape) == 4:
+                    suffix = " (current timepoint)"
+                item = QListWidgetItem(l.name + suffix)
                 self._available_images.append(l)
                 self.image_list.addItem(item)
                 if l in selected_images:
@@ -318,6 +334,20 @@ class ObjectSegmentation(QWidget):
             item = self.image_list.item(i)
             if item.isSelected():
                 images.append(image)
+        return images
+
+    def get_selected_images_data(self):
+        image_layers = self.get_selected_images()
+
+        images = []
+        for layer in image_layers:
+            value = layer.data
+            if len(value.shape) == 4:
+                current_time = self.viewer.dims.current_step[0]
+                value = value[current_time]
+                if value.shape[0] == 1:
+                    value = value[0]
+            images.append(value)
         return images
 
     def _on_selection(self, event=None):
@@ -395,7 +425,7 @@ class FeatureSelector(QWidget):
     def getFeatures(self):
         return self.feature_definition.replace("  ", " ").strip(" ")
 
-@register_dock_widget(menu="Classification > Object classification (APOC)")
+@register_dock_widget(menu="Segmentation > Object classification (APOC)")
 class ObjectClassifier(QWidget):
     def __init__(self, napari_viewer):
         super().__init__()
