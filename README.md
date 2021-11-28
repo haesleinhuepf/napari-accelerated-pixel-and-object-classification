@@ -8,7 +8,7 @@
 
 [clEsperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/)
 
-A yet experimental OpenCL-based Random Forest Classifier for pixel and labeled object classification in [napari].
+A GPU-accelerated, OpenCL-based Random Forest Classifier for pixel and labeled object classification in [napari].
 
 ![](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/screenshot.png)
 The processed example image [maize_clsm.tif](https://github.com/dlegland/mathematical_morphology_with_MorphoLibJ/blob/main/sampleImages/maize_clsm.tif)
@@ -17,22 +17,6 @@ is licensed by David Legland under
 
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
 
-
-----------------------------------
-
-This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [cookiecutter-napari-plugin] template.
-
-## Installation
-
-You can install `napari-accelerated-pixel-and-object-classification` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
-
-    conda install pyopencl
-    pip install napari-accelerated-pixel-and-object-classification
-    
-In case of issues in napari, make sure these dependencies are installed properly:
-    
-    pip install pyclesperanto_prototype
-    pip install apoc
 
 ## Usage
 
@@ -140,7 +124,23 @@ You can later re-use it by clicking the menu `Plugins > Segmentation (Accelerate
 
 ![img_5.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/img_5.png)
 
-This is an experimental napari plugin. Feedback is very welcome!
+This is a rather new napari plugin. Feedback is very welcome!
+
+----------------------------------
+
+This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [cookiecutter-napari-plugin] template.
+
+## Installation
+
+You can install `napari-accelerated-pixel-and-object-classification` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
+
+    conda install pyopencl
+    pip install napari-accelerated-pixel-and-object-classification
+    
+In case of issues in napari, make sure these dependencies are installed properly:
+    
+    pip install pyclesperanto_prototype
+    pip install apoc
 
 ## Contributing
  
