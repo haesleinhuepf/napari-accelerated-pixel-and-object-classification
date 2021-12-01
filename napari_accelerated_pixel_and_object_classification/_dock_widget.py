@@ -112,6 +112,10 @@ class ObjectSegmentation(QWidget):
                 warnings.warn("No ground truth annotation selected!")
                 return
 
+            if not self.check_image_sizes():
+                warnings.warn("Selected images and annotation must have the same dimensionality and size!")
+                return
+
             self.train(
                 self.get_selected_images_data(),
                 self.get_selected_annotation_data(),
@@ -287,6 +291,13 @@ class ObjectSegmentation(QWidget):
                 self.label_list.addItem(l.name + suffix)
                 i = i + 1
         self.label_list.setCurrentIndex(selected_index)
+
+    def check_image_sizes(self):
+        labels = self.get_selected_annotation_data()
+        for image in self.get_selected_images_data():
+            if not np.array_equal(image.shape, labels.shape):
+                return False
+        return True
 
     def get_selected_annotation(self):
         index = self.label_list.currentIndex()
