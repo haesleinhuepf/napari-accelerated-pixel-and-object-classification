@@ -1,4 +1,4 @@
-from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier
+from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier, ProbabilityMapper
 
 import numpy as np
 from napari_plugin_engine import napari_hook_implementation
@@ -12,6 +12,7 @@ def napari_experimental_provide_function():
     return [
         Train_object_segmentation,
         Apply_object_segmentation,
+        Apply_probability_mapper,
         Train_object_segmentation_from_visible_image_layers,
         Apply_object_segmentation_to_visible_image_layers,
         Train_pixel_classifier,
@@ -98,6 +99,16 @@ def Train_object_segmentation(
     clf.train(feature_stack, annotation, image)
 
     result = clf.predict(feature_stack, image)
+    return result
+
+
+@register_function(menu="Filtering > Probability Mapper (apply pretrained, APOC)")
+@time_slicer
+def Apply_probability_mapper(image: "napari.types.ImageData",
+                              model_filename : str = "ProbabilityMapper.cl",
+                              viewer: napari.Viewer = None) -> "napari.types.ImageData":
+    clf = ProbabilityMapper(opencl_filename=model_filename)
+    result = clf.predict(image=image)
     return result
 
 

@@ -17,7 +17,7 @@ from magicgui.types import FileDialogMode
 import numpy as np
 import napari
 
-from apoc import PredefinedFeatureSet, ObjectSegmenter, PixelClassifier
+from apoc import PredefinedFeatureSet, ObjectSegmenter, PixelClassifier, ProbabilityMapper
 from napari_tools_menu import register_dock_widget
 
 @register_dock_widget(menu="Segmentation > Object segmentation (APOC)")
@@ -61,7 +61,13 @@ class ObjectSegmentation(QWidget):
         training_widget.setLayout(QVBoxLayout())
 
         # Annotation
-        training_widget.layout().addWidget(QLabel("Select ground truth annotation / object label"))
+        if self.classifier_class == ObjectSegmentation:
+            suffix = " + object class"
+        elif self.classifier_class == ProbabilityMapper:
+            suffix = " + class for probability output"
+        else:
+            suffix = ""
+        training_widget.layout().addWidget(QLabel("Select ground truth annotation" + suffix))
         self.label_list = QComboBox()
         self.update_label_list()
 
@@ -74,9 +80,11 @@ class ObjectSegmentation(QWidget):
         num_object_annotation_spinner.setMaximumWidth(40)
         num_object_annotation_spinner.setMinimum(1)
         num_object_annotation_spinner.setValue(2)
-        if self.classifier_class != PixelClassifier:
-            print("classifier ", self.classifier_class)
+        if self.classifier_class == ObjectSegmentation:
             temp.layout().addWidget(num_object_annotation_spinner)
+        elif self.classifier_class == ProbabilityMapper:
+            temp.layout().addWidget(num_object_annotation_spinner)
+
         training_widget.layout().addWidget(temp)
 
         # Features
@@ -217,8 +225,10 @@ class ObjectSegmentation(QWidget):
             num_ensembles=num_trees,
             max_depth=num_max_depth)
 
-        if hasattr(clf, "positive_class_identifier"):
+        if self.classifier_class == ObjectSegmenter:
             clf.positive_class_identifier = object_annotation_value
+        elif self.classifier_class == ProbabilityMapper:
+            clf.output_probability_of_class = object_annotation_value
 
         print("annotation shape", annotation.shape)
 
@@ -238,7 +248,10 @@ class ObjectSegmentation(QWidget):
             self.viewer.layers[name].data = data
             self.viewer.layers[name].visible = True
         except KeyError:
-            self.viewer.add_labels(data, name=name)
+            if self.classifier_class == ProbabilityMapper:
+                self.viewer.add_image(data, name=name)
+            else:
+                self.viewer.add_labels(data, name=name)
 
     def predict(self, images, filename):
         print("predict")
@@ -374,6 +387,12 @@ class ObjectSegmentation(QWidget):
 class SemanticSegmentation(ObjectSegmentation):
     def __init__(self, napari_viewer):
         super().__init__(napari_viewer, classifier_class=PixelClassifier)
+
+@register_dock_widget(menu="Filtering > Probability mapper (APOC)")
+class ProbabilityMapping(ObjectSegmentation):
+    def __init__(self, napari_viewer):
+        super().__init__(napari_viewer, classifier_class=ProbabilityMapper)
+
 
 class FeatureSelector(QWidget):
     def __init__(self, feature_definition:str):
