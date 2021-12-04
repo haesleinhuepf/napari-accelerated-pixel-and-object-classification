@@ -40,7 +40,7 @@ def Train_pixel_classifier(
     result = clf.predict(features=feature_stack, image=image)
     return result
 
-@register_function(menu="Segmentation > Semantic segmentation (apply pretrained, APOC)")
+@register_function(menu="Segmentation / labeling > Semantic segmentation (apply pretrained, APOC)")
 @time_slicer
 def Apply_pixel_classification(image: "napari.types.ImageData",
                                model_filename : str = "PixelClassifier.cl",
@@ -112,7 +112,7 @@ def Apply_probability_mapper(image: "napari.types.ImageData",
     return result
 
 
-@register_function(menu="Segmentation > Object segmentation (apply pretrained, APOC)")
+@register_function(menu="Segmentation / labeling > Object segmentation (apply pretrained, APOC)")
 @time_slicer
 def Apply_object_segmentation(image: "napari.types.ImageData",
                               model_filename : str = "ObjectSegmenter.cl",
@@ -222,7 +222,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
     result = clf.predict(labels, image)
     return result
 
-@register_function(menu="Segmentation > Object classification (apply pretrained, APOC)")
+@register_function(menu="Segmentation post-processing > Object classification (apply pretrained, APOC)")
 @time_slicer
 def Apply_object_classification(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
