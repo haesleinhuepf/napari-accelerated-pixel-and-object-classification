@@ -277,7 +277,7 @@ class ObjectSegmentation(QWidget):
         self._add_to_viewer("Result of " + short_filename, result)
 
     def update_memory_consumption(self):
-        number_of_pixels = np.sum(np.fromiter(np.prod(i.shape) for i in self.get_selected_images_data()))
+        number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]))
         number_of_features = len(self.feature_selector.getFeatures().split(" "))
         number_of_bytes_per_pixel = 4
 
