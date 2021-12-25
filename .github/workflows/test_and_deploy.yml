@@ -22,8 +22,8 @@ jobs:
     runs-on: ${{ matrix.platform }}
     strategy:
       matrix:
-        platform: [ubuntu-latest, windows-latest, macos-latest]
-        python-version: [3.8, 3.9]
+        platform: [ubuntu-latest] # windows-latest and macos-latest disabled because pocl installation doesnt work
+        python-version: [3.7, 3.8]
 
     steps:
       - uses: actions/checkout@v2
@@ -31,6 +31,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
+          submodules: recursive
           python-version: ${{ matrix.python-version }}
 
       # these libraries, along with pytest-xvfb (added in the `deps` in tox.ini),
@@ -68,19 +69,25 @@ jobs:
         shell: bash -l {0}
         run: conda install -y pocl
       - name: Install dependencies
+        shell: bash -l {0}
         run: |
           python --version
           conda install -y pyopencl
           python -m pip install --upgrade pip
           # pip install setuptools tox tox-gh-actions
           pip install setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt5 pytest-xvfb
-          pip install setuptools tox tox-gh-actions
 
+          pip install -e .
       # this runs the platform-specific tests declared in tox.ini
-      - name: Test with tox
-        run: tox
-        env:
-          PLATFORM: ${{ matrix.platform }}
+      #- name: Install tox-conda
+      #  run: pip install tox-conda
+      #- name: Test with tox
+      #  run: tox
+      #  env:
+      #    PLATFORM: ${{ matrix.platform }}
+      - name: Test
+        shell: bash -l {0}
+        run: pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
         uses: codecov/codecov-action@v1
