@@ -1,3 +1,0 @@
-# from napari_oclrfc import threshold, image_arithmetic
-
-# add your tests here...

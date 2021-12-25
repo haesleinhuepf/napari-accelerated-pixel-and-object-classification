@@ -53,9 +53,27 @@ jobs:
       # setup-miniconda: https://github.com/conda-incubator/setup-miniconda
       # and
       # tox-conda: https://github.com/tox-dev/tox-conda
+      - name: Set up conda ${{ matrix.python-version }}
+          uses: conda-incubator/setup-miniconda@v2.0.0
+          with:
+            auto-update-conda: true
+            activate-environment: test
+            python-version: ${{ matrix.python-version }}
+            channels: conda-forge
+            - name: Conda info
+              shell: bash -l {0}
+              run: conda info
+      - name: Install pocl
+          if: runner.os == 'Linux'
+          shell: bash -l {0}
+          run: conda install -y pocl
       - name: Install dependencies
         run: |
+          python --version
+          conda install -y pyopencl
           python -m pip install --upgrade pip
+          # pip install setuptools tox tox-gh-actions
+          pip install setuptools wheel pytest pytest-cov pytest-benchmark pytest-qt pyqt5 pytest-xvfb
           pip install setuptools tox tox-gh-actions
 
       # this runs the platform-specific tests declared in tox.ini
