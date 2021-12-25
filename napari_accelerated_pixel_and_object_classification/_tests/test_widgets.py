@@ -57,6 +57,12 @@ def test_pixel_training_and_prediction(make_napari_viewer):
                     classifier_filename
                 )
 
+        segmenter.update_memory_consumption()
+        segmenter.get_selected_annotation()
+        segmenter.get_selected_annotation_data()
+        segmenter.get_selected_images()
+        segmenter.get_selected_images_data()
+
 def test_object_training_and_prediction(make_napari_viewer):
     viewer = make_napari_viewer()
 
