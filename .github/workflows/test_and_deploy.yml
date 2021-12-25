@@ -54,19 +54,19 @@ jobs:
       # and
       # tox-conda: https://github.com/tox-dev/tox-conda
       - name: Set up conda ${{ matrix.python-version }}
-          uses: conda-incubator/setup-miniconda@v2.0.0
-          with:
-            auto-update-conda: true
-            activate-environment: test
-            python-version: ${{ matrix.python-version }}
-            channels: conda-forge
-            - name: Conda info
-              shell: bash -l {0}
-              run: conda info
+        uses: conda-incubator/setup-miniconda@v2.0.0
+        with:
+          auto-update-conda: true
+          activate-environment: test
+          python-version: ${{ matrix.python-version }}
+          channels: conda-forge
+      - name: Conda info
+        shell: bash -l {0}
+        run: conda info
       - name: Install pocl
-          if: runner.os == 'Linux'
-          shell: bash -l {0}
-          run: conda install -y pocl
+        if: runner.os == 'Linux'
+        shell: bash -l {0}
+        run: conda install -y pocl
       - name: Install dependencies
         run: |
           python --version
