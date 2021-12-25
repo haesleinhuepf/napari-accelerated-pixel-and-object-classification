@@ -30,7 +30,7 @@ def test_training(make_napari_viewer):
     Connected_component_labeling(labels)
     Apply_object_classification(image, labels)
     Apply_pixel_classification(image)
-    Apply_object_segmentation(image)
+    #Apply_object_segmentation(image)
     #Apply_probability_mapper(image)
     Apply_object_segmentation_to_visible_image_layers(napari_viewer=viewer)
     Apply_pixel_classification_to_visible_image_layers(napari_viewer=viewer)
