@@ -193,7 +193,10 @@ class ObjectSegmentation(QWidget):
         @self.timer.timeout.connect
         def update_layer(*_):
             self.update_memory_consumption()
-            if not self.isVisible():
+            try:
+                if not self.isVisible():
+                    self.timer.stop()
+            except RuntimeError:
                 self.timer.stop()
 
         self.timer.start()
@@ -283,8 +286,10 @@ class ObjectSegmentation(QWidget):
 
         bytes = number_of_pixels * number_of_bytes_per_pixel * number_of_features
         text = "{bytes:.1f} MBytes".format(bytes=bytes / 1024 / 1024)
-        self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
-
+        try:
+            self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
+        except RuntimeError:
+            pass
 
     def update_label_list(self):
         selected_layer = self.get_selected_annotation()

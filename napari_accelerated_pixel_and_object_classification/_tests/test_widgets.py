@@ -1,3 +1,5 @@
+import numpy as np
+
 import napari_accelerated_pixel_and_object_classification
 import pytest
 
@@ -16,3 +18,37 @@ def test_something_with_viewer(widget_name, make_napari_viewer, napari_plugin_ma
         plugin_name=MY_PLUGIN_NAME, widget_name=widget_name
     )
     assert len(viewer.window._dock_widgets) == num_dw + 1
+
+def test_training(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._dock_widget import ObjectSegmentation
+    segmenter = ObjectSegmentation(viewer)
+
+    viewer.window.add_dock_widget(segmenter)
+
+    image = np.asarray([[0,1], [2,0]])
+    labels = np.asarray([[0,1], [2,0]]).astype(int)
+
+    classifier_filename = "object_segmenter.cl"
+
+    viewer.add_image(image)
+    viewer.add_labels(labels)
+
+    segmenter.timer.stop()
+    del segmenter.timer
+
+    segmenter.train(
+        [image],
+        labels,
+        2,
+        segmenter.feature_selector.getFeatures(),
+        2,
+        10,
+        classifier_filename
+    )
+
+    segmenter.predict(
+                [image],
+                classifier_filename
+            )
