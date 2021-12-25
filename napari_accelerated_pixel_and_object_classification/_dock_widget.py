@@ -193,7 +193,10 @@ class ObjectSegmentation(QWidget):
         @self.timer.timeout.connect
         def update_layer(*_):
             self.update_memory_consumption()
-            if not self.isVisible():
+            try:
+                if not self.isVisible():
+                    self.timer.stop()
+            except RuntimeError:
                 self.timer.stop()
 
         self.timer.start()
@@ -245,13 +248,13 @@ class ObjectSegmentation(QWidget):
 
     def _add_to_viewer(self, name, data):
         try:
-            self.viewer.layers[name].data = data
+            self.viewer.layers[name].data = data.astype(int)
             self.viewer.layers[name].visible = True
         except KeyError:
             if self.classifier_class == ProbabilityMapper:
                 self.viewer.add_image(data, name=name)
             else:
-                self.viewer.add_labels(data, name=name)
+                self.viewer.add_labels(data.astype(int), name=name)
 
     def predict(self, images, filename):
         print("predict")
@@ -283,8 +286,10 @@ class ObjectSegmentation(QWidget):
 
         bytes = number_of_pixels * number_of_bytes_per_pixel * number_of_features
         text = "{bytes:.1f} MBytes".format(bytes=bytes / 1024 / 1024)
-        self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
-
+        try:
+            self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
+        except RuntimeError:
+            pass
 
     def update_label_list(self):
         selected_layer = self.get_selected_annotation()
