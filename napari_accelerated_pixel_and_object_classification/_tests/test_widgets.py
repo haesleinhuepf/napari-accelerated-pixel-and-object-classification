@@ -19,36 +19,49 @@ def test_something_with_viewer(widget_name, make_napari_viewer, napari_plugin_ma
     )
     assert len(viewer.window._dock_widgets) == num_dw + 1
 
-def test_training(make_napari_viewer):
+def test_pixel_training_and_prediction(make_napari_viewer):
     viewer = make_napari_viewer()
 
-    from napari_accelerated_pixel_and_object_classification._dock_widget import ObjectSegmentation
-    segmenter = ObjectSegmentation(viewer)
+    from napari_accelerated_pixel_and_object_classification._dock_widget import ObjectSegmentation, \
+        SemanticSegmentation, ProbabilityMapping
 
-    viewer.window.add_dock_widget(segmenter)
+    for Klass in [ObjectSegmentation, SemanticSegmentation, ProbabilityMapping]:
 
-    image = np.asarray([[0,1], [2,0]])
-    labels = np.asarray([[0,1], [2,0]]).astype(int)
+        segmenter = Klass(viewer)
 
-    classifier_filename = "object_segmenter.cl"
+        viewer.window.add_dock_widget(segmenter)
 
-    viewer.add_image(image)
-    viewer.add_labels(labels)
+        image = np.asarray([[0,1], [2,0]])
+        labels = np.asarray([[0,1], [2,0]]).astype(int)
 
-    segmenter.timer.stop()
-    del segmenter.timer
+        classifier_filename = "object_segmenter.cl"
 
-    segmenter.train(
-        [image],
-        labels,
-        2,
-        segmenter.feature_selector.getFeatures(),
-        2,
-        10,
-        classifier_filename
-    )
+        viewer.add_image(image)
+        viewer.add_labels(labels)
 
-    segmenter.predict(
-                [image],
-                classifier_filename
-            )
+        segmenter.timer.stop()
+        del segmenter.timer
+
+        segmenter.train(
+            [image],
+            labels,
+            2,
+            segmenter.feature_selector.getFeatures(),
+            2,
+            10,
+            classifier_filename
+        )
+
+        segmenter.predict(
+                    [image],
+                    classifier_filename
+                )
+
+def test_object_training_and_prediction(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._dock_widget import ObjectClassifier
+
+    classifier = ObjectClassifier(viewer)
+
+    viewer.window.add_dock_widget(classifier)

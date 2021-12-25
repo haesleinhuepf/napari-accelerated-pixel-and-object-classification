@@ -248,13 +248,13 @@ class ObjectSegmentation(QWidget):
 
     def _add_to_viewer(self, name, data):
         try:
-            self.viewer.layers[name].data = data
+            self.viewer.layers[name].data = data.astype(int)
             self.viewer.layers[name].visible = True
         except KeyError:
             if self.classifier_class == ProbabilityMapper:
                 self.viewer.add_image(data, name=name)
             else:
-                self.viewer.add_labels(data, name=name)
+                self.viewer.add_labels(data.astype(int), name=name)
 
     def predict(self, images, filename):
         print("predict")

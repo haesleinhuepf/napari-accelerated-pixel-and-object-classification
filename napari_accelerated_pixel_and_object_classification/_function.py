@@ -123,7 +123,7 @@ def Apply_object_segmentation(image: "napari.types.ImageData",
 
 def Train_object_segmentation_from_visible_image_layers(
         annotation : "napari.types.LabelsData",
-        model_filename : str = "object_segmenter.cl",
+        model_filename : str = "ObjectSegmenter.cl",
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
