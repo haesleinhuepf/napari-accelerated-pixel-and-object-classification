@@ -1,4 +1,4 @@
-apoc>=0.5.9
+apoc>=0.6.0
 napari-tools-menu
 napari-time-slicer
 -e .
