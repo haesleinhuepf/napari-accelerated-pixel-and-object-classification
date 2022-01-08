@@ -61,7 +61,7 @@ class ObjectSegmentation(QWidget):
         training_widget.setLayout(QVBoxLayout())
 
         # Annotation
-        if self.classifier_class == ObjectSegmentation:
+        if self.classifier_class == ObjectSegmenter:
             suffix = " + object class"
         elif self.classifier_class == ProbabilityMapper:
             suffix = " + class for probability output"
@@ -80,7 +80,7 @@ class ObjectSegmentation(QWidget):
         num_object_annotation_spinner.setMaximumWidth(40)
         num_object_annotation_spinner.setMinimum(1)
         num_object_annotation_spinner.setValue(2)
-        if self.classifier_class == ObjectSegmentation:
+        if self.classifier_class == ObjectSegmenter:
             temp.layout().addWidget(num_object_annotation_spinner)
         elif self.classifier_class == ProbabilityMapper:
             temp.layout().addWidget(num_object_annotation_spinner)
