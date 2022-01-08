@@ -88,9 +88,14 @@ class ObjectSegmentation(QWidget):
         training_widget.layout().addWidget(temp)
 
         # Features
-        training_widget.layout().addWidget(QLabel("Select features"))
+        feature_selection_button = QPushButton("Select features")
+        training_widget.layout().addWidget(feature_selection_button)
         self.feature_selector = FeatureSelector(PredefinedFeatureSet.small_dog_log.value)
         training_widget.layout().addWidget(self.feature_selector)
+        @feature_selection_button.clicked.connect
+        def toggle_feature_selector_visibility():
+            self.feature_selector.setVisible(not self.feature_selector.isVisible())
+        self.feature_selector.setVisible(False)
 
         num_max_depth_spinner = QSpinBox()
         num_max_depth_spinner.setMinimum(2)
@@ -405,8 +410,9 @@ class FeatureSelector(QWidget):
         self.setLayout(QVBoxLayout())
         self.feature_definition = " " + feature_definition.lower() + " "
 
-        self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"]
-        self.available_features_short_names = ["Gauss", "DoG", "LoG"]
+        self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur", "sobel_of_gaussian_blur"]
+        self.available_features_short_names = ["Gauss", "DoG", "LoG", "SoG"]
+        self.available_features_tool_tips = ["Gaussian", "Difference of Gaussian", "Laplacian of Gaussian", "Sobel of Gaussian\nalso known as Gaussian Gradient Magnitude"]
 
         self.radii = [0.3, 0.5, 1, 2, 3, 4, 5, 10, 15, 25]
 
@@ -423,8 +429,10 @@ class FeatureSelector(QWidget):
 
         # Feature lines
         row = 1
-        for f, f_short in zip(self.available_features, self.available_features_short_names):
-            table.layout().addWidget(QLabel(f_short), row, 0)
+        for f, f_short, f_tooltip in zip(self.available_features, self.available_features_short_names, self.available_features_tool_tips):
+            label = QLabel(f_short)
+            label.setToolTip(f_tooltip)
+            table.layout().addWidget(label, row, 0)
             for i, r in enumerate(self.radii):
                 table.layout().addWidget(self._make_checkbox("", f + "=" + str(r), (f + "=" + str(r)) in self.feature_definition), row, i + 1)
             row = row + 1
