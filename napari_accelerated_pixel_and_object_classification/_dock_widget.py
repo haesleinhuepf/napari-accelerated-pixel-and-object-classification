@@ -40,7 +40,8 @@ class ObjectSegmentation(QWidget):
         self.image_list.setSelectionMode(
             QAbstractItemView.ExtendedSelection
         )
-        self.image_list.setGeometry(QRect(10, 10, 101, 291))
+        #self.image_list.setGeometry(QRect(10, 10, 10, 10))
+        self.image_list.setMaximumHeight(100)
         self.update_image_list()
         self.layout().addWidget(self.image_list)
 
@@ -75,6 +76,7 @@ class ObjectSegmentation(QWidget):
         temp.setLayout(QHBoxLayout())
 
         temp.layout().addWidget(self.label_list)
+        set_border(self.label_list)
 
         num_object_annotation_spinner = QSpinBox()
         num_object_annotation_spinner.setMaximumWidth(40)
@@ -84,8 +86,9 @@ class ObjectSegmentation(QWidget):
             temp.layout().addWidget(num_object_annotation_spinner)
         elif self.classifier_class == ProbabilityMapper:
             temp.layout().addWidget(num_object_annotation_spinner)
-
+        set_border(num_object_annotation_spinner)
         training_widget.layout().addWidget(temp)
+        set_border(temp)
 
         # Features
         feature_selection_button = QPushButton("Select features")
@@ -114,6 +117,7 @@ class ObjectSegmentation(QWidget):
         temp.layout().addWidget(num_max_depth_spinner)
         temp.layout().addWidget(num_trees_spinner)
         training_widget.layout().addWidget(temp)
+        set_border(temp)
 
         self.label_memory_consumption = QLabel("")
         training_widget.layout().addWidget(self.label_memory_consumption)
@@ -184,6 +188,8 @@ class ObjectSegmentation(QWidget):
         tabs.addTab(prediction_widget, "Application / Prediction")
 
         self.layout().addWidget(tabs)
+        set_border(self)
+        set_border(training_widget)
 
         # ----------------------------------------------------------
         # Spacer
@@ -420,9 +426,7 @@ class FeatureSelector(QWidget):
         table = QWidget()
         table.setLayout(QGridLayout())
         table.layout().addWidget(QLabel("sigma"), 0, 0)
-        table.layout().setSpacing(0)
-        if hasattr(table.layout(), "setMargin"):
-            table.layout().setMargin(0)
+        set_border(table)
 
         for i, r in enumerate(self.radii):
             table.layout().addWidget(QLabel(str(r)), 0, i + 1)
@@ -479,3 +483,11 @@ class ObjectClassifier(QWidget):
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
     return [ObjectSegmentation, SemanticSegmentation, ObjectClassifier]
+
+
+def set_border(widget, spacing=2, margin=0):
+    if hasattr(widget.layout(), "setMargin"):
+        widget.layout().setMargin(margin)
+    if hasattr(widget.layout(), "setSpacing"):
+        widget.layout().setSpacing(spacing)
+
