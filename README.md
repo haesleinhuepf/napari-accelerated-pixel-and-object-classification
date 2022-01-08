@@ -18,7 +18,7 @@ is licensed by David Legland under
 [CC-BY 4.0 license](https://github.com/dlegland/mathematical_morphology_with_MorphoLibJ/blob/main/LICENSE)
 
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
-For executing APOC classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please, read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification).
+For executing APOC classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification).
 
 ![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/img.png)
 
