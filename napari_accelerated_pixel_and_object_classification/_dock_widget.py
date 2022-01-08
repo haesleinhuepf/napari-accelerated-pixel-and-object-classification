@@ -37,6 +37,7 @@ class ObjectSegmentation(QWidget):
         # Image selection list
         self.layout().addWidget(QLabel("Select image[s]/channels[s] used for training"))
         self.image_list = QListWidget()
+        self.image_list.setToolTip("The selected image[s] will be considered as individual channels of the same scene. These images must be spatially related and must have the same size.")
         self.image_list.setSelectionMode(
             QAbstractItemView.ExtendedSelection
         )
@@ -70,6 +71,7 @@ class ObjectSegmentation(QWidget):
             suffix = ""
         training_widget.layout().addWidget(QLabel("Select ground truth annotation" + suffix))
         self.label_list = QComboBox()
+        self.label_list.setToolTip("Please provide a labels layer with an annotation to guide the Random Forest training. This labels layer must have the same size as the images selected above.")
         self.update_label_list()
 
         temp = QWidget()
@@ -79,6 +81,7 @@ class ObjectSegmentation(QWidget):
         set_border(self.label_list)
 
         num_object_annotation_spinner = QSpinBox()
+        num_object_annotation_spinner.setToolTip("Please select the label ID / class that should be focused on while training the classifier.")
         num_object_annotation_spinner.setMaximumWidth(40)
         num_object_annotation_spinner.setMinimum(1)
         num_object_annotation_spinner.setValue(2)
@@ -120,6 +123,7 @@ class ObjectSegmentation(QWidget):
         set_border(temp)
 
         self.label_memory_consumption = QLabel("")
+        self.label_memory_consumption.setToolTip("Try to keep estimated memory consumption low. This will also speed up computation.")
         training_widget.layout().addWidget(self.label_memory_consumption)
 
         # Train button
@@ -425,11 +429,16 @@ class FeatureSelector(QWidget):
         # Headline
         table = QWidget()
         table.setLayout(QGridLayout())
-        table.layout().addWidget(QLabel("sigma"), 0, 0)
+        label_sigma = QLabel("sigma")
+        sigma_help = "Increase sigma in case a pixels classification depends on the intensity of other more proximal pixels."
+        label_sigma.setToolTip(sigma_help)
+        table.layout().addWidget(label_sigma, 0, 0)
         set_border(table)
 
         for i, r in enumerate(self.radii):
-            table.layout().addWidget(QLabel(str(r)), 0, i + 1)
+            label_sigma = QLabel(str(r))
+            label_sigma.setToolTip(sigma_help)
+            table.layout().addWidget(label_sigma, 0, i + 1)
 
         # Feature lines
         row = 1
@@ -485,9 +494,9 @@ def napari_experimental_provide_dock_widget():
     return [ObjectSegmentation, SemanticSegmentation, ObjectClassifier]
 
 
-def set_border(widget, spacing=2, margin=0):
-    if hasattr(widget.layout(), "setMargin"):
-        widget.layout().setMargin(margin)
+def set_border(widget:QWidget, spacing=2, margin=0):
+    if hasattr(widget.layout(), "setContentsMargins"):
+        widget.layout().setContentsMargins(margin, margin, margin, margin)
     if hasattr(widget.layout(), "setSpacing"):
         widget.layout().setSpacing(spacing)
 
