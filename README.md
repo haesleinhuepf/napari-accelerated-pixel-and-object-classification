@@ -28,11 +28,7 @@ Starting point is napari with at least one image layer and one labels layer (you
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_segmentation_starting_point.png)
 
-You find Object and Semantic Segmentation in the `Tools > Segmentation / labeling` in the main plugins menu:
-
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
-
-When starting those, the following graphical user interface will show up.
+You find Object and Semantic Segmentation in the `Tools > Segmentation / labeling`. When starting those, the following graphical user interface will show up.
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_and_semantic_segmentation.png)
 
