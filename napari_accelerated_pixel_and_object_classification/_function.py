@@ -13,6 +13,7 @@ def napari_experimental_provide_function():
     return [
         Train_object_segmentation,
         Apply_object_segmentation,
+        Train_probability_mapper,
         Apply_probability_mapper,
         Train_object_segmentation_from_visible_image_layers,
         Apply_object_segmentation_to_visible_image_layers,
@@ -36,6 +37,26 @@ def Train_pixel_classifier(
         feature_stack = custom_features
 
     clf = PixelClassifier(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth)
+    clf.train(feature_stack, annotation, image)
+
+    result = clf.predict(features=feature_stack, image=image)
+    return result
+
+def Train_probability_mapper(
+        image: "napari.types.ImageData",
+        annotation : "napari.types.LabelsData",
+        model_filename : str = "ProbabilityMapper.cl",
+        featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
+        custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
+        output_probability_of_class : int = 2,
+        max_depth : int = 2,
+        num_ensembles : int = 10
+) -> "napari.types.LabelsData":
+    feature_stack = featureset.value
+    if feature_stack == "":
+        feature_stack = custom_features
+
+    clf = ProbabilityMapper(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth, output_probability_of_class=output_probability_of_class)
     clf.train(feature_stack, annotation, image)
 
     result = clf.predict(features=feature_stack, image=image)
