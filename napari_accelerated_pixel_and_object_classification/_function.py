@@ -167,7 +167,6 @@ def Connected_component_labeling(labels: "napari.types.LabelsData", object_class
 @register_dock_widget(menu="Segmentation post-processing > Object classification (APOC)")
 @magic_factory(
     model_filename=dict(widget_type='FileEdit', mode='w'),
-    intensity_stats=dict(label='intensity statistics (min,mean,max,std-dev,sum)'),
     shape_extension_ratio=dict(label='shape (extension ratio)')
 )
 def Train_object_classifier(image: "napari.types.ImageData",
@@ -176,7 +175,11 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             model_filename : "magicgui.types.PathLike" = "ObjectClassifier.cl",
                             max_depth : int = 2,
                             num_ensembles : int = 10,
-                            intensity_stats: bool = False,
+                            minimum_intensity: bool = False,
+                            mean_intensity: bool = False,
+                            maximum_intensity: bool = False,
+                            sum_intensity: bool = False,
+                            standard_deviation_intensity: bool = False,
                             pixel_count: bool = True,
                             shape_extension_ratio: bool = False,
                             centroid_position:bool = False,
@@ -190,8 +193,16 @@ def Train_object_classifier(image: "napari.types.ImageData",
     features = ","
     if pixel_count:
         features = features + "area,"
-    if intensity_stats:
-        features = features + "min_intensity,mean_intensity,max_intensity,standard_deviation_intensity,sum_intensity,"
+    if minium_intensity:
+        features = features + "min_intensity,"
+    if mean_intensity:
+        features = features + "mean_intensity,"
+    if maxium_intensity:
+        features = features + "max_intensity,"
+    if standard_deviation_intensity:
+        features = features + "standard_deviation_intensity,"
+    if sum_intensity:
+        features = features + "sum_intensity,"
     if shape_extension_ratio:
         features = features + "mean_max_distance_to_centroid_ratio,"
     if centroid_position:
@@ -207,6 +218,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
     if average_centroid_distance_to_10_nearest_neighbors:
         features = features + "average_distance_of_n_nearest_neighbors=10,"
 
+    # remove first and last comma
     features = features[1:-1]
 
     clf = ObjectClassifier(opencl_filename=model_filename, num_ensembles=num_ensembles,
