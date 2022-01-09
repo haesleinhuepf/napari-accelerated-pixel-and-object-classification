@@ -22,7 +22,7 @@ def test_training(make_napari_viewer):
     viewer.add_image(image)
     viewer.add_labels(labels)
 
-    Train_object_classifier(image, labels, labels)
+    Train_object_classifier()(image, labels, labels)
     Train_pixel_classifier(image, labels)
     #Train_object_segmentation(image, labels)
     Train_object_segmentation_from_visible_image_layers(labels, napari_viewer=viewer)
