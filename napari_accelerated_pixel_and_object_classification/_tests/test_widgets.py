@@ -66,8 +66,8 @@ def test_pixel_training_and_prediction(make_napari_viewer):
 def test_object_training_and_prediction(make_napari_viewer):
     viewer = make_napari_viewer()
 
-    from napari_accelerated_pixel_and_object_classification._dock_widget import ObjectClassifier
+    from napari_accelerated_pixel_and_object_classification._function import Train_object_classifier
 
-    classifier = ObjectClassifier(viewer)
+    classifier = Train_object_classifier()
 
     viewer.window.add_dock_widget(classifier)
