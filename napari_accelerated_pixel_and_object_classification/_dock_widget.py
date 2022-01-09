@@ -488,17 +488,12 @@ class FeatureSelector(QWidget):
     def getFeatures(self):
         return self.feature_definition.replace("  ", " ").strip(" ")
 
-@register_dock_widget(menu="Segmentation post-processing > Object classification (APOC)")
-class ObjectClassifier(QWidget):
-    def __init__(self, napari_viewer):
-        super().__init__()
-        from ._function import Train_object_classifier
-        napari_viewer.window.add_function_widget(Train_object_classifier)
 
 @napari_hook_implementation
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
-    return [ObjectSegmentation, SemanticSegmentation, ObjectClassifier]
+    from ._function import Train_object_classifier
+    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier]
 
 
 def set_border(widget:QWidget, spacing=2, margin=0):

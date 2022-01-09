@@ -5,7 +5,8 @@ from napari_plugin_engine import napari_hook_implementation
 
 import napari
 from napari_time_slicer import time_slicer
-from napari_tools_menu import register_function
+from napari_tools_menu import register_function, register_dock_widget
+from magicgui import magic_factory
 
 @napari_hook_implementation
 def napari_experimental_provide_function():
@@ -163,19 +164,20 @@ def Connected_component_labeling(labels: "napari.types.LabelsData", object_class
         instances = cle.connected_components_labeling_box(binary)
     return instances
 
-
+@register_dock_widget(menu="Segmentation post-processing > Object classification (APOC)")
+@magic_factory(
+    model_filename=dict(widget_type='FileEdit', mode='w'),
+    intensity_stats=dict(label='intensity statistics (min,mean,max,std-dev,sum)'),
+    shape_extension_ratio=dict(label='shape (extension ratio)')
+)
 def Train_object_classifier(image: "napari.types.ImageData",
                             labels : "napari.types.LabelsData",
                             annotation : "napari.types.LabelsData",
-                            model_filename : str = "ObjectClassifier.cl",
+                            model_filename : "magicgui.types.PathLike" = "ObjectClassifier.cl",
                             max_depth : int = 2,
                             num_ensembles : int = 10,
-                            pixel_count : bool = True,
-                            minimum_intensity: bool = False,
-                            mean_intensity: bool = False,
-                            maximum_intensity: bool = False,
-                            sum_intensity: bool = False,
-                            standard_deviation_intensity: bool = False,
+                            intensity_stats: bool = False,
+                            pixel_count: bool = True,
                             shape_extension_ratio: bool = False,
                             centroid_position:bool = False,
                             touching_neighbor_count:bool = False,
@@ -188,16 +190,8 @@ def Train_object_classifier(image: "napari.types.ImageData",
     features = ","
     if pixel_count:
         features = features + "area,"
-    if minimum_intensity:
-        features = features + "min_intensity,"
-    if mean_intensity:
-        features = features + "mean_intensity,"
-    if maximum_intensity:
-        features = features + "max_intensity,"
-    if sum_intensity:
-        features = features + "sum_intensity,"
-    if standard_deviation_intensity:
-        features = features + "standard_deviation_intensity,"
+    if intensity_stats:
+        features = features + "min_intensity,mean_intensity,max_intensity,standard_deviation_intensity,sum_intensity,"
     if shape_extension_ratio:
         features = features + "mean_max_distance_to_centroid_ratio,"
     if centroid_position:
