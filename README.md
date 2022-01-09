@@ -88,16 +88,23 @@ This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [c
 
 ## Installation
 
-You can install `napari-accelerated-pixel-and-object-classification` via [pip]. Note: you also need [pyopencl](https://documen.tician.de/pyopencl/).
+It is recommended to install the plugin in a conda environment. Therefore install conda first, e.g. [mini-conda](https://docs.conda.io/en/latest/miniconda.html).
+If you never worked with conda before, reading this [short introduction](https://github.com/BiAPoL/Bio-image_Analysis_with_Python/blob/main/conda_basics/01_conda_environments.md) might be helpful.
 
-    conda install pyopencl
-    pip install napari-accelerated-pixel-and-object-classification
-    
-In case of issues in napari, make sure these dependencies are installed properly:
-    
-    pip install pyclesperanto_prototype
-    pip install apoc
+Optional: Setup a fresh conda environment, activate it and install napari:
 
+```
+conda create --name napari_apoc python=3.9
+conda activate napari_apoc
+conda install napari
+```
+
+If your conda environment is set up, you can install `napari-accelerated-pixel-and-object-classification` using [pip]. Note: you need [pyopencl](https://documen.tician.de/pyopencl/) first.
+
+```
+ conda install pyopencl
+ pip install napari-accelerated-pixel-and-object-classification
+```
 ## Contributing
  
 Contributions, feedback and suggestions are very welcome. Tests can be run with [tox], please ensure
