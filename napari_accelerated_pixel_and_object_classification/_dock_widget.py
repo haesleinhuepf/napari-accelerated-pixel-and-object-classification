@@ -13,6 +13,7 @@ from napari._qt.qthreading import thread_worker
 from qtpy.QtCore import QTimer, QRect
 from magicgui.widgets import FileEdit
 from magicgui.types import FileDialogMode
+from superqt import QCollapsible
 
 import numpy as np
 import napari
@@ -35,16 +36,16 @@ class ObjectSegmentation(QWidget):
 
         # ----------------------------------------------------------
         # Image selection list
-        self.layout().addWidget(QLabel("Select image[s]/channels[s] used for training"))
+        self.layout().addWidget(QLabel("Select images (channels) used for training"))
         self.image_list = QListWidget()
+        self.image_list.setToolTip("The selected image[s] will be considered as individual channels of the same scene. These images should be spatially related and must have the same size.")
         self.image_list.setSelectionMode(
             QAbstractItemView.ExtendedSelection
         )
-        self.image_list.setGeometry(QRect(10, 10, 101, 291))
+        #self.image_list.setGeometry(QRect(10, 10, 10, 10))
+        self.image_list.setMaximumHeight(100)
         self.update_image_list()
         self.layout().addWidget(self.image_list)
-
-
 
         # ----------------------------------------------------------
         # Classifier filename
@@ -69,14 +70,17 @@ class ObjectSegmentation(QWidget):
             suffix = ""
         training_widget.layout().addWidget(QLabel("Select ground truth annotation" + suffix))
         self.label_list = QComboBox()
+        self.label_list.setToolTip("Please provide a labels layer with an annotation to guide the Random Forest training. This labels layer must have the same size as the images selected above.")
         self.update_label_list()
 
         temp = QWidget()
         temp.setLayout(QHBoxLayout())
 
         temp.layout().addWidget(self.label_list)
+        set_border(self.label_list)
 
         num_object_annotation_spinner = QSpinBox()
+        num_object_annotation_spinner.setToolTip("Please select the label ID / class that should be focused on while training the classifier.")
         num_object_annotation_spinner.setMaximumWidth(40)
         num_object_annotation_spinner.setMinimum(1)
         num_object_annotation_spinner.setValue(2)
@@ -84,23 +88,38 @@ class ObjectSegmentation(QWidget):
             temp.layout().addWidget(num_object_annotation_spinner)
         elif self.classifier_class == ProbabilityMapper:
             temp.layout().addWidget(num_object_annotation_spinner)
-
+        set_border(num_object_annotation_spinner)
         training_widget.layout().addWidget(temp)
+        set_border(temp)
 
         # Features
-        training_widget.layout().addWidget(QLabel("Select features"))
+        collabsible = QCollapsible("Select features")
+        training_widget.layout().addWidget(collabsible)
+
+        #feature_selection_button = QPushButton("Select features")
+        #training_widget.layout().addWidget(feature_selection_button)
+
         self.feature_selector = FeatureSelector(PredefinedFeatureSet.small_dog_log.value)
-        training_widget.layout().addWidget(self.feature_selector)
+        collabsible.addWidget(self.feature_selector)
+        collabsible.setDuration(0)
+        set_border(collabsible)
+        #training_widget.layout().addWidget(self.feature_selector)
+        #@feature_selection_button.clicked.connect
+        #def toggle_feature_selector_visibility():
+        #    self.feature_selector.setVisible(not self.feature_selector.isVisible())
+        #self.feature_selector.setVisible(False)
 
         num_max_depth_spinner = QSpinBox()
         num_max_depth_spinner.setMinimum(2)
         num_max_depth_spinner.setMaximum(10)
         num_max_depth_spinner.setValue(2)
+        num_max_depth_spinner.setToolTip("The more image channels and features you selected, the higher the maximum tree depth should be to retrieve a reliable and robust classifier. The deeper the trees, the longer processing will take.")
 
         num_trees_spinner = QSpinBox()
         num_trees_spinner.setMinimum(1)
         num_trees_spinner.setMaximum(1000)
         num_trees_spinner.setValue(10)
+        num_max_depth_spinner.setToolTip("The more image channels and features you selected, the more trees should be used to retrieve a reliable and robust classifier. The more trees, the longer processing will take.")
 
         # Max Depth / Number of ensembles
         temp = QWidget()
@@ -109,8 +128,10 @@ class ObjectSegmentation(QWidget):
         temp.layout().addWidget(num_max_depth_spinner)
         temp.layout().addWidget(num_trees_spinner)
         training_widget.layout().addWidget(temp)
+        set_border(temp)
 
         self.label_memory_consumption = QLabel("")
+        self.label_memory_consumption.setToolTip("Try to keep estimated memory consumption low. This will also speed up computation.")
         training_widget.layout().addWidget(self.label_memory_consumption)
 
         # Train button
@@ -179,6 +200,7 @@ class ObjectSegmentation(QWidget):
         tabs.addTab(prediction_widget, "Application / Prediction")
 
         self.layout().addWidget(tabs)
+        set_border(training_widget)
 
         # ----------------------------------------------------------
         # Spacer
@@ -405,26 +427,32 @@ class FeatureSelector(QWidget):
         self.setLayout(QVBoxLayout())
         self.feature_definition = " " + feature_definition.lower() + " "
 
-        self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur"]
-        self.available_features_short_names = ["Gauss", "DoG", "LoG"]
+        self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur", "sobel_of_gaussian_blur"]
+        self.available_features_short_names = ["Gauss", "DoG", "LoG", "SoG"]
+        self.available_features_tool_tips = ["Gaussian filter", "Difference of Gaussian", "Laplacian of Gaussian", "Sobel of Gaussian\nalso known as Gradient Magnitude of Gaussian"]
 
         self.radii = [0.3, 0.5, 1, 2, 3, 4, 5, 10, 15, 25]
 
         # Headline
         table = QWidget()
         table.setLayout(QGridLayout())
-        table.layout().addWidget(QLabel("sigma"), 0, 0)
-        table.layout().setSpacing(0)
-        if hasattr(table.layout(), "setMargin"):
-            table.layout().setMargin(0)
+        label_sigma = QLabel("sigma")
+        sigma_help = "Increase sigma in case a pixels classification depends on the intensity of other more proximal pixels."
+        label_sigma.setToolTip(sigma_help)
+        table.layout().addWidget(label_sigma, 0, 0)
+        set_border(table)
 
         for i, r in enumerate(self.radii):
-            table.layout().addWidget(QLabel(str(r)), 0, i + 1)
+            label_sigma = QLabel(str(r))
+            label_sigma.setToolTip(sigma_help)
+            table.layout().addWidget(label_sigma, 0, i + 1)
 
         # Feature lines
         row = 1
-        for f, f_short in zip(self.available_features, self.available_features_short_names):
-            table.layout().addWidget(QLabel(f_short), row, 0)
+        for f, f_short, f_tooltip in zip(self.available_features, self.available_features_short_names, self.available_features_tool_tips):
+            label = QLabel(f_short)
+            label.setToolTip(f_tooltip)
+            table.layout().addWidget(label, row, 0)
             for i, r in enumerate(self.radii):
                 table.layout().addWidget(self._make_checkbox("", f + "=" + str(r), (f + "=" + str(r)) in self.feature_definition), row, i + 1)
             row = row + 1
@@ -432,7 +460,7 @@ class FeatureSelector(QWidget):
         self.layout().addWidget(table)
 
         self.layout().addWidget(self._make_checkbox("Consider original image as well", "original", " original " in self.feature_definition))
-
+        set_border(self)
 
 
     def _make_checkbox(self, title, feature, checked):
@@ -471,3 +499,11 @@ class ObjectClassifier(QWidget):
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
     return [ObjectSegmentation, SemanticSegmentation, ObjectClassifier]
+
+
+def set_border(widget:QWidget, spacing=2, margin=0):
+    if hasattr(widget.layout(), "setContentsMargins"):
+        widget.layout().setContentsMargins(margin, margin, margin, margin)
+    if hasattr(widget.layout(), "setSpacing"):
+        widget.layout().setSpacing(spacing)
+
