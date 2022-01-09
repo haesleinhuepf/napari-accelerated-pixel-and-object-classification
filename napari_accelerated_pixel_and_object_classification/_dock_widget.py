@@ -13,6 +13,7 @@ from napari._qt.qthreading import thread_worker
 from qtpy.QtCore import QTimer, QRect
 from magicgui.widgets import FileEdit
 from magicgui.types import FileDialogMode
+from superqt import QCollapsible
 
 import numpy as np
 import napari
@@ -35,9 +36,9 @@ class ObjectSegmentation(QWidget):
 
         # ----------------------------------------------------------
         # Image selection list
-        self.layout().addWidget(QLabel("Select image[s]/channels[s] used for training"))
+        self.layout().addWidget(QLabel("Select images (channels) used for training"))
         self.image_list = QListWidget()
-        self.image_list.setToolTip("The selected image[s] will be considered as individual channels of the same scene. These images must be spatially related and must have the same size.")
+        self.image_list.setToolTip("The selected image[s] will be considered as individual channels of the same scene. These images should be spatially related and must have the same size.")
         self.image_list.setSelectionMode(
             QAbstractItemView.ExtendedSelection
         )
@@ -45,8 +46,6 @@ class ObjectSegmentation(QWidget):
         self.image_list.setMaximumHeight(100)
         self.update_image_list()
         self.layout().addWidget(self.image_list)
-
-
 
         # ----------------------------------------------------------
         # Classifier filename
@@ -94,24 +93,33 @@ class ObjectSegmentation(QWidget):
         set_border(temp)
 
         # Features
-        feature_selection_button = QPushButton("Select features")
-        training_widget.layout().addWidget(feature_selection_button)
+        collabsible = QCollapsible("Select features")
+        training_widget.layout().addWidget(collabsible)
+
+        #feature_selection_button = QPushButton("Select features")
+        #training_widget.layout().addWidget(feature_selection_button)
+
         self.feature_selector = FeatureSelector(PredefinedFeatureSet.small_dog_log.value)
-        training_widget.layout().addWidget(self.feature_selector)
-        @feature_selection_button.clicked.connect
-        def toggle_feature_selector_visibility():
-            self.feature_selector.setVisible(not self.feature_selector.isVisible())
-        self.feature_selector.setVisible(False)
+        collabsible.addWidget(self.feature_selector)
+        collabsible.setDuration(0)
+        set_border(collabsible)
+        #training_widget.layout().addWidget(self.feature_selector)
+        #@feature_selection_button.clicked.connect
+        #def toggle_feature_selector_visibility():
+        #    self.feature_selector.setVisible(not self.feature_selector.isVisible())
+        #self.feature_selector.setVisible(False)
 
         num_max_depth_spinner = QSpinBox()
         num_max_depth_spinner.setMinimum(2)
         num_max_depth_spinner.setMaximum(10)
         num_max_depth_spinner.setValue(2)
+        num_max_depth_spinner.setToolTip("The more image channels and features you selected, the higher the maximum tree depth should be to retrieve a reliable and robust classifier. The deeper the trees, the longer processing will take.")
 
         num_trees_spinner = QSpinBox()
         num_trees_spinner.setMinimum(1)
         num_trees_spinner.setMaximum(1000)
         num_trees_spinner.setValue(10)
+        num_max_depth_spinner.setToolTip("The more image channels and features you selected, the more trees should be used to retrieve a reliable and robust classifier. The more trees, the longer processing will take.")
 
         # Max Depth / Number of ensembles
         temp = QWidget()
@@ -192,7 +200,6 @@ class ObjectSegmentation(QWidget):
         tabs.addTab(prediction_widget, "Application / Prediction")
 
         self.layout().addWidget(tabs)
-        set_border(self)
         set_border(training_widget)
 
         # ----------------------------------------------------------
@@ -422,7 +429,7 @@ class FeatureSelector(QWidget):
 
         self.available_features = ["gaussian_blur", "difference_of_gaussian", "laplace_box_of_gaussian_blur", "sobel_of_gaussian_blur"]
         self.available_features_short_names = ["Gauss", "DoG", "LoG", "SoG"]
-        self.available_features_tool_tips = ["Gaussian", "Difference of Gaussian", "Laplacian of Gaussian", "Sobel of Gaussian\nalso known as Gaussian Gradient Magnitude"]
+        self.available_features_tool_tips = ["Gaussian filter", "Difference of Gaussian", "Laplacian of Gaussian", "Sobel of Gaussian\nalso known as Gradient Magnitude of Gaussian"]
 
         self.radii = [0.3, 0.5, 1, 2, 3, 4, 5, 10, 15, 25]
 
@@ -453,7 +460,7 @@ class FeatureSelector(QWidget):
         self.layout().addWidget(table)
 
         self.layout().addWidget(self._make_checkbox("Consider original image as well", "original", " original " in self.feature_definition))
-
+        set_border(self)
 
 
     def _make_checkbox(self, title, feature, checked):
