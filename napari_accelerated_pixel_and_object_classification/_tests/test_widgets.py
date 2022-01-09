@@ -63,6 +63,15 @@ def test_pixel_training_and_prediction(make_napari_viewer):
         segmenter.get_selected_images()
         segmenter.get_selected_images_data()
 
+        segmenter.label_list.setCurrentIndex(0)
+        segmenter.image_list.item(0).setSelected(True)
+        segmenter.get_selected_annotation()
+        segmenter.get_selected_annotation_data()
+        segmenter.get_selected_images()
+        segmenter.get_selected_images_data()
+
+        segmenter.check_image_sizes()
+
 def test_object_training_and_prediction(make_napari_viewer):
     viewer = make_napari_viewer()
 
@@ -71,3 +80,13 @@ def test_object_training_and_prediction(make_napari_viewer):
     classifier = Train_object_classifier()
 
     viewer.window.add_dock_widget(classifier)
+
+def test_feature_selector():
+    from napari_accelerated_pixel_and_object_classification._dock_widget import FeatureSelector
+
+    f = FeatureSelector("original gaussian_blur=1")
+    f._remove_feature("original")
+    f._add_feature("original")
+
+    cb = f._make_checkbox("a", "b", True)
+    cb.setChecked(False)
