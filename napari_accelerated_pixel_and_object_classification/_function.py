@@ -165,52 +165,52 @@ def Connected_component_labeling(labels: "napari.types.LabelsData", object_class
 
 
 def Train_object_classifier(image: "napari.types.ImageData",
-        labels : "napari.types.LabelsData",
-        annotation : "napari.types.LabelsData",
-        model_filename : str = "ObjectClassifier.cl",
-        max_depth : int = 2,
-        num_ensembles : int = 10,
-        area : bool = True,
-        min_intensity: bool = False,
-        mean_intensity: bool = False,
-        max_intensity: bool = False,
-        sum_intensity: bool = False,
-        standard_deviation_intensity: bool = False,
-        shape: bool = False,
-        position:bool = False,
-        touching_neighbor_count:bool = False,
-        average_distance_of_touching_neighbors:bool = False,
-        distance_to_nearest_neighbor:bool = False,
-        average_distance_to_6_nearest_neighbors:bool = False,
-        average_distance_to_10_nearest_neighbors:bool = False,
-    ) -> "napari.types.LabelsData":
+                            labels : "napari.types.LabelsData",
+                            annotation : "napari.types.LabelsData",
+                            model_filename : str = "ObjectClassifier.cl",
+                            max_depth : int = 2,
+                            num_ensembles : int = 10,
+                            pixel_count : bool = True,
+                            minimum_intensity: bool = False,
+                            mean_intensity: bool = False,
+                            maximum_intensity: bool = False,
+                            sum_intensity: bool = False,
+                            standard_deviation_intensity: bool = False,
+                            shape_extension_ratio: bool = False,
+                            centroid_position:bool = False,
+                            touching_neighbor_count:bool = False,
+                            average_centroid_distance_of_touching_neighbors:bool = False,
+                            centroid_distance_to_nearest_neighbor:bool = False,
+                            average_centroid_distance_to_6_nearest_neighbors:bool = False,
+                            average_centroid_distance_to_10_nearest_neighbors:bool = False,
+                            ) -> "napari.types.LabelsData":
 
     features = ","
-    if area:
+    if pixel_count:
         features = features + "area,"
-    if min_intensity:
+    if minimum_intensity:
         features = features + "min_intensity,"
     if mean_intensity:
         features = features + "mean_intensity,"
-    if max_intensity:
+    if maximum_intensity:
         features = features + "max_intensity,"
     if sum_intensity:
         features = features + "sum_intensity,"
     if standard_deviation_intensity:
         features = features + "standard_deviation_intensity,"
-    if shape:
+    if shape_extension_ratio:
         features = features + "mean_max_distance_to_centroid_ratio,"
-    if position:
+    if centroid_position:
         features = features + "centroid_x,centroid_y,centroid_z,"
     if touching_neighbor_count:
         features = features + "touching_neighbor_count,"
-    if average_distance_of_touching_neighbors:
+    if average_centroid_distance_of_touching_neighbors:
         features = features + "average_distance_of_touching_neighbors,"
-    if distance_to_nearest_neighbor:
+    if centroid_distance_to_nearest_neighbor:
         features = features + "average_distance_of_n_nearest_neighbors=1,"
-    if average_distance_to_6_nearest_neighbors:
+    if average_centroid_distance_to_6_nearest_neighbors:
         features = features + "average_distance_of_n_nearest_neighbors=6,"
-    if average_distance_to_10_nearest_neighbors:
+    if average_centroid_distance_to_10_nearest_neighbors:
         features = features + "average_distance_of_n_nearest_neighbors=10,"
 
     features = features[1:-1]
