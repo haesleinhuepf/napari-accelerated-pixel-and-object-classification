@@ -48,7 +48,9 @@ def Apply_pixel_classification(image: "napari.types.ImageData",
                                viewer: napari.Viewer = None) -> "napari.types.LabelsData":
 
     clf = PixelClassifier(opencl_filename=model_filename)
-    result = clf.predict(image=image)
+    print("Hello world")
+    result = clf.predict(image=[image])
+    print("Result is ", result.shape, result.dtype)
     return result
 
 def Train_pixel_classifier_from_visible_image_layers(
@@ -97,9 +99,9 @@ def Train_object_segmentation(
         feature_stack = custom_features
 
     clf = ObjectSegmenter(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth, positive_class_identifier=annotated_object_intensity)
-    clf.train(feature_stack, annotation, image)
+    clf.train(feature_stack, annotation, [image])
 
-    result = clf.predict(feature_stack, image)
+    result = clf.predict(feature_stack, [image])
     return result
 
 
@@ -119,7 +121,7 @@ def Apply_object_segmentation(image: "napari.types.ImageData",
                               model_filename : str = "ObjectSegmenter.cl",
                               viewer: napari.Viewer = None) -> "napari.types.LabelsData":
     clf = ObjectSegmenter(opencl_filename=model_filename)
-    result = clf.predict(image=image)
+    result = clf.predict(image=[image])
     return result
 
 def Train_object_segmentation_from_visible_image_layers(

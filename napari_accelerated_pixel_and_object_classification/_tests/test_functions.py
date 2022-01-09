@@ -34,3 +34,21 @@ def test_training(make_napari_viewer):
     #Apply_probability_mapper(image)
     Apply_object_segmentation_to_visible_image_layers(napari_viewer=viewer)
     Apply_pixel_classification_to_visible_image_layers(napari_viewer=viewer)
+
+def test_object_segmentation():
+
+    from napari_accelerated_pixel_and_object_classification._function import Train_object_segmentation,\
+        Apply_object_segmentation
+    import pyclesperanto_prototype as cle
+
+    image = cle.push(np.asarray([
+        [0,1],
+        [2,0]]))
+    labels = cle.push(np.asarray([
+        [1,2],
+        [2,1]]).astype(int))
+
+    import apoc
+    Train_object_segmentation(image, labels, model_filename="file.cl", featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
+    #Apply_object_segmentation(image, model_filename="file.cl")
+    #Apply_probability_mapper(image)
