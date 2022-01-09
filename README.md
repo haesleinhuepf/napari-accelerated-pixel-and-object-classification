@@ -20,11 +20,11 @@ is licensed by David Legland under
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
 For executing APOC classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification).
 
-![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/img.png)
+![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/screenshot.png)
 
 ## Usage
 
-### Usage: Object and Semantic Segmentation
+### Object and Semantic Segmentation
 
 Starting point is napari with at least one image layer and one labels layer (your annotation).
 
@@ -60,9 +60,9 @@ You can use this code for example to apply the same classifier to a folder of im
 A pre-trained classifier can be [applied from scripts as shown in the example notebook]() or from the `Tools > Segmentation / labeling > Object segmentation (apply pretrained, APOC)`.
 The tools for generating semantic segmentations and probability maps (`Tools > Filtering` menu) work analogously.
 
-### Usage: Object classification
+### Object classification
 
-Click the menu `Plugins > Segmentation (Accelerated Pixel and Object Classification) > Object classifier`. 
+Click the menu `Tools > Segmentation post-processing > Object classification (APOC)`. 
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/menu.png)
 
