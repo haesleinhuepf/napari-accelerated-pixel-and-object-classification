@@ -114,6 +114,11 @@ If your conda environment is set up, you can install `napari-accelerated-pixel-a
 Contributions, feedback and suggestions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
+## Similar napari plugins
+There are other plugins with similar functionality for interactive classification of pixels and objects.
+
+* [napari-feature-classifier](https://github.com/fractal-napari-plugins-collection/napari-feature-classifier)
+
 ## License
 
 Distributed under the terms of the [BSD-3] license,
