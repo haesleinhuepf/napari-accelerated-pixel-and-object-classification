@@ -106,8 +106,8 @@ conda install napari
 If your conda environment is set up, you can install `napari-accelerated-pixel-and-object-classification` using [pip]. Note: you need [pyopencl](https://documen.tician.de/pyopencl/) first.
 
 ```
- conda install pyopencl
- pip install napari-accelerated-pixel-and-object-classification
+conda install -c conda-forge pyopencl
+pip install napari-accelerated-pixel-and-object-classification
 ```
 ## Contributing
  
