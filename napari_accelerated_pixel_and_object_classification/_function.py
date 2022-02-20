@@ -211,6 +211,8 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             centroid_distance_to_nearest_neighbor:bool = False,
                             average_centroid_distance_to_6_nearest_neighbors:bool = False,
                             average_centroid_distance_to_10_nearest_neighbors:bool = False,
+                            show_classifier_statistics = False,
+                            viewer : "napari.Viewer" = None
                             ) -> "napari.types.LabelsData":
 
     features = ","
@@ -249,6 +251,14 @@ def Train_object_classifier(image: "napari.types.ImageData",
 
     clf.train(features, labels, annotation, image)
     result = clf.predict(labels, image)
+
+    if show_classifier_statistics and viewer is not None:
+        from qtpy.QtWidgets import QTableWidget
+        from ._dock_widget import update_model_analysis
+        table = QTableWidget()
+        update_model_analysis(table, clf)
+        viewer.window.add_dock_widget(table)
+    
     return result
 
 @register_function(menu="Segmentation post-processing > Object classification (apply pretrained, APOC)")

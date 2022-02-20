@@ -279,7 +279,7 @@ class ObjectSegmentation(QWidget):
         short_filename = filename.split("/")[-1]
         self._add_to_viewer("Result of " + short_filename, result)
 
-        self.update_model_analysis(clf)
+        update_model_analysis(self._model_statistics_table, clf)
 
     def _add_to_viewer(self, name, data):
         try:
@@ -423,28 +423,28 @@ class ObjectSegmentation(QWidget):
         if num_images_in_viewer != self.image_list.size():
             self.update_image_list()
 
-    def update_model_analysis(self, classifier):
-        table, _ = classifier.statistics()
+def update_model_analysis(statistics_table, classifier):
+    table, _ = classifier.statistics()
 
-        self._model_statistics_table.clear()
-        try:
-            self._model_statistics_table.setColumnCount(len(next(iter(table.values()))))
-            self._model_statistics_table.setRowCount(len(table))
-        except StopIteration:
-            pass
+    statistics_table.clear()
+    try:
+        statistics_table.setColumnCount(len(next(iter(table.values()))))
+        statistics_table.setRowCount(len(table))
+    except StopIteration:
+        pass
 
-        for i, column in enumerate(table.keys()):
-            self._model_statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(column))
+    for i, column in enumerate(table.keys()):
+        statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(column))
 
-            for j, value in enumerate(table.get(column)):
-                item = QTableWidgetItem("{:.3f}".format(value))
-                if not np.isnan(value):
-                    brush = QBrush()
-                    rel_value = value / np.max([table[key][j] for key in table.keys()])
-                    brush.setColor(QColor(int((1.0 - rel_value) * 255), int(rel_value * 255), int((1.0 - rel_value) * 255), 255 ))
-                    item.setBackground(brush.color())
-                    item.setForeground(QColor(0,0,0,255))
-                self._model_statistics_table.setItem(i, j, item)
+        for j, value in enumerate(table.get(column)):
+            item = QTableWidgetItem("{:.3f}".format(value))
+            if not np.isnan(value):
+                brush = QBrush()
+                rel_value = value / np.max([table[key][j] for key in table.keys()])
+                brush.setColor(QColor(int((1.0 - rel_value) * 255), int(rel_value * 255), int((1.0 - rel_value) * 255), 255 ))
+                item.setBackground(brush.color())
+                item.setForeground(QColor(0,0,0,255))
+            statistics_table.setItem(i, j, item)
 
 
 
