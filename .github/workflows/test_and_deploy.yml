@@ -64,10 +64,10 @@ jobs:
       - name: Conda info
         shell: bash -l {0}
         run: conda info
-      - name: Install pocl
+      - name: Install oclgrind
         if: runner.os == 'Linux'
         shell: bash -l {0}
-        run: conda install -y pocl
+        run: conda install -y oclgrind
       - name: Install dependencies
         shell: bash -l {0}
         run: |

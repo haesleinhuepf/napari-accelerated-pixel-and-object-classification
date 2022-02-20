@@ -90,3 +90,9 @@ def test_feature_selector():
 
     cb = f._make_checkbox("a", "b", True)
     cb.setChecked(False)
+
+if __name__ == "__main__":
+    import napari
+    test_object_training_and_prediction(napari.Viewer)
+    test_feature_selector()
+    test_pixel_training_and_prediction(napari.Viewer)

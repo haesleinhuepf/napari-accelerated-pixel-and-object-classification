@@ -8,6 +8,7 @@ from qtpy.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QPushButton, QLabe
 from qtpy.QtWidgets import QTableWidget, QTableWidgetItem, QWidget, QGridLayout, QPushButton, QFileDialog
 from qtpy.QtWidgets import QListWidget, QListWidgetItem, QAbstractItemView, QTabWidget, QComboBox, QPlainTextEdit
 from qtpy.QtCore import Qt
+from qtpy.QtGui import QBrush, QColor, QFont
 from magicgui.widgets import Table
 from napari._qt.qthreading import thread_worker
 from qtpy.QtCore import QTimer, QRect
@@ -161,6 +162,15 @@ class ObjectSegmentation(QWidget):
         training_widget.layout().addItem(verticalSpacer)
 
         # ----------------------------------------------------------
+        # Model statistics
+
+        self._model_statistics_table = QTableWidget()
+
+        model_statistics_widget = QWidget()
+        model_statistics_widget.setLayout(QVBoxLayout())
+        model_statistics_widget.layout().addWidget(self._model_statistics_table)
+
+        # ----------------------------------------------------------
         # Prediction
         prediction_widget = QWidget()
         prediction_widget.setLayout(QVBoxLayout())
@@ -197,6 +207,7 @@ class ObjectSegmentation(QWidget):
         # Training / Prediction tabs
         tabs = QTabWidget()
         tabs.addTab(training_widget, "Training")
+        tabs.addTab(model_statistics_widget, "Model statistics")
         tabs.addTab(prediction_widget, "Application / Prediction")
 
         self.layout().addWidget(tabs)
@@ -267,6 +278,8 @@ class ObjectSegmentation(QWidget):
 
         short_filename = filename.split("/")[-1]
         self._add_to_viewer("Result of " + short_filename, result)
+
+        update_model_analysis(self._model_statistics_table, clf)
 
     def _add_to_viewer(self, name, data):
         try:
@@ -410,6 +423,31 @@ class ObjectSegmentation(QWidget):
         if num_images_in_viewer != self.image_list.size():
             self.update_image_list()
 
+def update_model_analysis(statistics_table, classifier):
+    table, _ = classifier.statistics()
+
+    statistics_table.clear()
+    try:
+        statistics_table.setColumnCount(len(next(iter(table.values()))))
+        statistics_table.setRowCount(len(table))
+    except StopIteration:
+        pass
+
+    for i, column in enumerate(table.keys()):
+        statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(column))
+
+        for j, value in enumerate(table.get(column)):
+            item = QTableWidgetItem("{:.3f}".format(value))
+            if not np.isnan(value):
+                brush = QBrush()
+                rel_value = value / np.max([table[key][j] for key in table.keys()])
+                brush.setColor(QColor(int((1.0 - rel_value) * 255), int(rel_value * 255), int((1.0 - rel_value) * 255), 255 ))
+                item.setBackground(brush.color())
+                item.setForeground(QColor(0,0,0,255))
+            statistics_table.setItem(i, j, item)
+
+
+
 @register_dock_widget(menu="Segmentation / labeling > Semantic segmentation (APOC)")
 class SemanticSegmentation(ObjectSegmentation):
     def __init__(self, napari_viewer):
@@ -487,6 +525,8 @@ class FeatureSelector(QWidget):
 
     def getFeatures(self):
         return self.feature_definition.replace("  ", " ").strip(" ")
+
+
 
 
 @napari_hook_implementation
