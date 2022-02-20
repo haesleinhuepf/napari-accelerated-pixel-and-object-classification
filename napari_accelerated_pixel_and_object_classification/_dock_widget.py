@@ -433,14 +433,10 @@ class ObjectSegmentation(QWidget):
         except StopIteration:
             pass
 
-        print("TABLE", table)
-
         for i, column in enumerate(table.keys()):
-            print("Key:", column)
             self._model_statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(column))
 
             for j, value in enumerate(table.get(column)):
-                print("V", value)
                 item = QTableWidgetItem("{:.3f}".format(value))
                 if not np.isnan(value):
                     brush = QBrush()
