@@ -211,8 +211,41 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             centroid_distance_to_nearest_neighbor:bool = False,
                             average_centroid_distance_to_6_nearest_neighbors:bool = False,
                             average_centroid_distance_to_10_nearest_neighbors:bool = False,
-                            show_classifier_statistics = False,
+                            show_classifier_statistics:bool = False,
                             viewer : "napari.Viewer" = None
+                            ) -> "napari.types.LabelsData":
+    return _Train_object_classifier(image, labels, annotation, model_filename, max_depth, num_ensembles,
+                                    minimum_intensity, mean_intensity, maximum_intensity, sum_intensity,
+                                    standard_deviation_intensity, pixel_count, shape_extension_ratio,
+                                    centroid_position, touching_neighbor_count,
+                                    average_centroid_distance_of_touching_neighbors,
+                                    centroid_distance_to_nearest_neighbor,
+                                    average_centroid_distance_to_6_nearest_neighbors,
+                                    average_centroid_distance_to_10_nearest_neighbors,
+                                    show_classifier_statistics, viewer)
+
+
+def _Train_object_classifier(image: "napari.types.ImageData",
+                            labels: "napari.types.LabelsData",
+                            annotation: "napari.types.LabelsData",
+                            model_filename: "magicgui.types.PathLike" = "ObjectClassifier.cl",
+                            max_depth: int = 2,
+                            num_ensembles: int = 10,
+                            minimum_intensity: bool = False,
+                            mean_intensity: bool = False,
+                            maximum_intensity: bool = False,
+                            sum_intensity: bool = False,
+                            standard_deviation_intensity: bool = False,
+                            pixel_count: bool = True,
+                            shape_extension_ratio: bool = False,
+                            centroid_position: bool = False,
+                            touching_neighbor_count: bool = False,
+                            average_centroid_distance_of_touching_neighbors: bool = False,
+                            centroid_distance_to_nearest_neighbor: bool = False,
+                            average_centroid_distance_to_6_nearest_neighbors: bool = False,
+                            average_centroid_distance_to_10_nearest_neighbors: bool = False,
+                            show_classifier_statistics:bool =False,
+                            viewer: "napari.Viewer" = None
                             ) -> "napari.types.LabelsData":
 
     features = ","
