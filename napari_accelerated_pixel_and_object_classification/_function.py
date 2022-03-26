@@ -252,6 +252,14 @@ def Train_object_classifier(image: "napari.types.ImageData",
     clf.train(features, labels, annotation, image)
     result = clf.predict(labels, image)
 
+    if viewer is not None:
+        from napari_workflows._workflow import _get_layer_from_data
+        layer = _get_layer_from_data(viewer, labels)
+        if layer is not None:
+            for key, item in clf._data.items():
+                print(key, type(item), item.shape)
+            layer.properties = clf._data
+
     if show_classifier_statistics and viewer is not None:
         from qtpy.QtWidgets import QTableWidget
         from ._dock_widget import update_model_analysis
