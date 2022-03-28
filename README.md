@@ -92,7 +92,7 @@ A pre-trained model can later be applied [from scripts as shown in the example n
 There are other napari plugins that allow measurements of label layers such as listed below. 
 After using one of those plugins for extracting features, you can use the menu `Tools > Segmentation post-processing > Object / custom feature classification (APOC)`
 to classify objects in a labels layer according to your custom measured features.
-Select `Labels` (2) and `Annotation` (3) layers as explained above and use the SHIFT and CTRL keys to select multiple features in the `Features` list (4) below and train your classifer (5).
+Select `Labels` (2) and `Annotation` (3) layers as explained above and use the SHIFT and CTRL keys to select multiple features in the `Features` list (4) below and train your classifer (5) to produce a classification label image (6).
 
 ![img.png](images/custom_classifier.png)
 
