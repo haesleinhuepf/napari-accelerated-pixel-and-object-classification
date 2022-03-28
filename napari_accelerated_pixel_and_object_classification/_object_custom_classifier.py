@@ -97,7 +97,7 @@ class LabelClassificationWidget(QWidget):
         # Run button
         run_widget = QWidget()
         run_widget.setLayout(QHBoxLayout())
-        run_button = QPushButton("Run")
+        run_button = QPushButton("Train")
         run_widget.layout().addWidget(run_button)
 
         def run_clicked():
