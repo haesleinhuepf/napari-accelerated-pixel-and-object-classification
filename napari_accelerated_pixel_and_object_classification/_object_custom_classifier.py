@@ -10,7 +10,7 @@ from napari_tools_menu import register_dock_widget
 from qtpy.QtCore import QRect
 from qtpy.QtWidgets import (
     QAbstractItemView,
-    QComboBox,
+    QCheckBox,
     QHBoxLayout,
     QLabel,
     QListWidget,
@@ -94,6 +94,9 @@ class LabelClassificationWidget(QWidget):
         rfc_config_widget.layout().addWidget(num_max_depth_spinner)
         rfc_config_widget.layout().addWidget(num_trees_spinner)
 
+        # classifier statistics checkbox
+        classifier_statistics_checkbox = QCheckBox("Show classifier statistics")
+
         # Run button
         run_widget = QWidget()
         run_widget.setLayout(QHBoxLayout())
@@ -120,7 +123,8 @@ class LabelClassificationWidget(QWidget):
                 [i.text() for i in self.properties_list.selectedItems()],
                 str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/"),
                 num_max_depth_spinner.value(),
-                num_trees_spinner.value()
+                num_trees_spinner.value(),
+                classifier_statistics_checkbox.isChecked()
             )
 
         run_button.clicked.connect(run_clicked)
@@ -138,6 +142,7 @@ class LabelClassificationWidget(QWidget):
         self.layout().addWidget(choose_properties_container)
         self.layout().addWidget(update_container)
         self.layout().addWidget(rfc_config_widget)
+        self.layout().addWidget(classifier_statistics_checkbox)
         self.layout().addWidget(run_widget)
         self.layout().setSpacing(0)
 
@@ -181,7 +186,8 @@ class LabelClassificationWidget(QWidget):
             selected_measurements_list,
             classifier_filename,
             max_depth,
-            num_ensembles
+            num_ensembles,
+            show_classifier_statistics
     ):
         print("Selected labels layer: " + str(labels_layer))
         print("Selected measurements: " + str(selected_measurements_list))
@@ -212,6 +218,13 @@ class LabelClassificationWidget(QWidget):
         new_labels = cle.replace_intensities(labels_layer.data, label_classification)
         short_filename = classifier_filename.split("/")[-1]
         self._add_to_viewer("Result of " + short_filename, new_labels)
+
+        if show_classifier_statistics and self.viewer is not None:
+            from qtpy.QtWidgets import QTableWidget
+            from ._dock_widget import update_model_analysis
+            table = QTableWidget()
+            update_model_analysis(table, trc)
+            self.viewer.window.add_dock_widget(table)
 
     def _add_to_viewer(self, name, data):
         try:
