@@ -120,7 +120,7 @@ class ObjectSegmentation(QWidget):
         num_trees_spinner.setMinimum(1)
         num_trees_spinner.setMaximum(1000)
         num_trees_spinner.setValue(10)
-        num_max_depth_spinner.setToolTip("The more image channels and features you selected, the more trees should be used to retrieve a reliable and robust classifier. The more trees, the longer processing will take.")
+        num_trees_spinner.setToolTip("The more image channels and features you selected, the more trees should be used to retrieve a reliable and robust classifier. The more trees, the longer processing will take.")
 
         # Max Depth / Number of ensembles
         temp = QWidget()
