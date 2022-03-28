@@ -87,6 +87,31 @@ If classification worked well, it may for example look like this. Note the two t
 
 A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
 
+## Object classification with custom features
+
+There are other napari plugins that allow measurements of label layers such as listed below. 
+After using one of those plugins for extracting features, you can use the menu `Tools > Segmentation post-processing > Object / custom feature classification (APOC)`
+to classify objects in a labels layer according to your custom measured features.
+Select `Labels` (2) and `Annotation` (3) layers as explained above and use the SHIFT and CTRL keys to select multiple features in the `Features` list (4) below and train your classifer (5).
+
+![img.png](images/custom_classifier.png)
+
+In screenshot above, we applied [napari-skimage-regionprops](https://www.napari-hub.org/plugins/napari-skimage-regionprops)' `Tools > Measurement > Regionprops (nsr)` menu to measure size and shape of objects in a labels image (2) derived from an image (1).
+
+## See also
+
+There are other napari plugins with similar functionality for extracting features:
+* [morphometrics](https://www.napari-hub.org/plugins/morphometrics)
+* [PartSeg](https://www.napari-hub.org/plugins/PartSeg)
+* [napari-skimage-regionprops](https://www.napari-hub.org/plugins/napari-skimage-regionprops)
+* [napari-simpleitk-image-processing](https://www.napari-hub.org/plugins/napari-simpleitk-image-processing)
+* [napari-cupy-image-processing](https://www.napari-hub.org/plugins/napari-cupy-image-processing)
+* [napari-pyclesperanto-assistant](https://www.napari-hub.org/plugins/napari-pyclesperanto-assistant)
+
+Furthermore, there are plugins for postprocessing extracted measurements
+* [napari-feature-classifier](https://www.napari-hub.org/plugins/napari-feature-classifier)
+* [napari-clusters-plotter](https://www.napari-hub.org/plugins/napari-clusters-plotter)
+
 ----------------------------------
 
 This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [cookiecutter-napari-plugin] template.
