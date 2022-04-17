@@ -87,6 +87,21 @@ If classification worked well, it may for example look like this. Note the two t
 
 A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
 
+### Object classification from custom measurements
+
+You can also train a [TableRowClassifier](https://github.com/haesleinhuepf/apoc/blob/main/demo/table_row_classification.ipynb) that classifies labeled objects according to custom measurements. 
+
+For deriving those measurements, you can use these napari plugins:
+
+* [morphometrics](https://www.napari-hub.org/plugins/morphometrics)
+* [PartSeg](https://www.napari-hub.org/plugins/PartSeg)
+* [napari-simpleitk-image-processing](https://www.napari-hub.org/plugins/napari-simpleitk-image-processing)
+* [napari-cupy-image-processing](https://www.napari-hub.org/plugins/napari-cupy-image-processing)
+* [napari-pyclesperanto-assistant](https://www.napari-hub.org/plugins/napari-pyclesperanto-assistant)
+* [napari-skimage-regionprops](https://www.napari-hub.org/plugins/napari-skimage-regionprops)
+
+Furthermore, if you use napari from Python, you can also create a dictionary or pandas DataFrame with measurements and store it in the `labels_layer.features` to make them available in the object classifier.
+
 ----------------------------------
 
 This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [cookiecutter-napari-plugin] template.

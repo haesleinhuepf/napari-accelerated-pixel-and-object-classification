@@ -533,7 +533,8 @@ class FeatureSelector(QWidget):
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
     from ._function import Train_object_classifier
-    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier]
+    from ._custom_table_row_classifier import CustomObjectClassifierWidget
+    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier, CustomObjectClassifierWidget]
 
 
 def set_border(widget:QWidget, spacing=2, margin=0):
