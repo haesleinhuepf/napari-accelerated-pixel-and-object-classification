@@ -223,7 +223,7 @@ class CustomObjectClassifierWidget(QWidget):
         print("annotated classes", annotated_classes)
 
         import apoc
-        classifier = apoc.TableRowClassifier(opencl_filename=classifier_filename, max_depth=2, num_ensembles=10)
+        classifier = apoc.TableRowClassifier(opencl_filename=classifier_filename, max_depth=max_depth, num_ensembles=num_trees)
         classifier.train(selected_properties, annotated_classes)
         prediction = np.asarray(classifier.predict(selected_properties)).tolist()
         print("RFC predictions finished.")
