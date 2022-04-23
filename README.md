@@ -65,7 +65,7 @@ This will open a small table after training where you can see how large the shar
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/classifier_statistics.png)
 
-It is recommended to turn on/off the features that hold a very large share or a very small share of trees in the random forest. 
+It is recommended to turn on/off the features that hold a very large share (green) or a very small share (magenta) of trees in the random forest. 
 Retrain the classifier to see how the features influence the decision making.
 
 Note: Multiple of these parameters may be correlated. 
