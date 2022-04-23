@@ -1,4 +1,4 @@
-apoc>=0.6.8
+apoc>=0.7.0
 napari-tools-menu
 napari-time-slicer
 superqt
