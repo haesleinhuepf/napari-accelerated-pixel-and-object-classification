@@ -135,6 +135,11 @@ class ObjectSegmentation(QWidget):
         self.label_memory_consumption.setToolTip("Try to keep estimated memory consumption low. This will also speed up computation.")
         training_widget.layout().addWidget(self.label_memory_consumption)
 
+        # show statistics checkbox
+        show_classifier_statistics_checkbox = QCheckBox("Show classifier statistics")
+        show_classifier_statistics_checkbox.setChecked(False)
+        training_widget.layout().addWidget(show_classifier_statistics_checkbox)
+
         # Train button
         button = QPushButton("Train")
         def train_clicked(*arg, **kwargs):
@@ -153,22 +158,14 @@ class ObjectSegmentation(QWidget):
                 self.feature_selector.getFeatures(),
                 num_max_depth_spinner.value(),
                 num_trees_spinner.value(),
-                str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/")
+                str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/"),
+                show_classifier_statistics_checkbox.isChecked(),
             )
         button.clicked.connect(train_clicked)
         training_widget.layout().addWidget(button)
 
         verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
         training_widget.layout().addItem(verticalSpacer)
-
-        # ----------------------------------------------------------
-        # Model statistics
-
-        self._model_statistics_table = QTableWidget()
-
-        model_statistics_widget = QWidget()
-        model_statistics_widget.setLayout(QVBoxLayout())
-        model_statistics_widget.layout().addWidget(self._model_statistics_table)
 
         # ----------------------------------------------------------
         # Prediction
@@ -207,7 +204,6 @@ class ObjectSegmentation(QWidget):
         # Training / Prediction tabs
         tabs = QTabWidget()
         tabs.addTab(training_widget, "Training")
-        tabs.addTab(model_statistics_widget, "Model statistics")
         tabs.addTab(prediction_widget, "Application / Prediction")
 
         self.layout().addWidget(tabs)
@@ -235,7 +231,16 @@ class ObjectSegmentation(QWidget):
         self.timer.start()
 
 
-    def train(self, images, annotation, object_annotation_value, feature_definition, num_max_depth, num_trees, filename):
+    def train(self,
+              images,
+              annotation,
+              object_annotation_value,
+              feature_definition,
+              num_max_depth,
+              num_trees,
+              filename,
+              show_classifier_statistics,
+    ):
         print("train " + str(self.classifier_class.__name__))
         print("num images", len(images))
         print("object annotation value", object_annotation_value)
@@ -256,30 +261,33 @@ class ObjectSegmentation(QWidget):
             images = images[0]
 
         apoc.erase_classifier(filename)
-        clf = self.classifier_class(
+        classifier = self.classifier_class(
             opencl_filename=filename,
             num_ensembles=num_trees,
             max_depth=num_max_depth)
 
         if self.classifier_class == ObjectSegmenter:
-            clf.positive_class_identifier = object_annotation_value
+            classifier.positive_class_identifier = object_annotation_value
         elif self.classifier_class == ProbabilityMapper:
-            clf.output_probability_of_class = object_annotation_value
+            classifier.output_probability_of_class = object_annotation_value
 
         print("annotation shape", annotation.shape)
 
-        clf.train(feature_definition, annotation, images)
+        classifier.train(feature_definition, annotation, images)
 
         print("Training done. Applying model...")
 
-        result = np.asarray(clf.predict(features=feature_definition, image=images))
+        result = np.asarray(classifier.predict(features=feature_definition, image=images))
 
         print("Applying / prediction done.")
 
         short_filename = filename.split("/")[-1]
         self._add_to_viewer("Result of " + short_filename, result)
 
-        update_model_analysis(self._model_statistics_table, clf)
+        if show_classifier_statistics and self.viewer is not None:
+            table = QTableWidget()
+            update_model_analysis(table, classifier)
+            self.viewer.window.add_dock_widget(table)
 
     def _add_to_viewer(self, name, data):
         try:
