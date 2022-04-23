@@ -431,26 +431,30 @@ class ObjectSegmentation(QWidget):
 
 def update_model_analysis(statistics_table, classifier):
     table, _ = classifier.statistics()
-
-    statistics_table.clear()
     try:
         statistics_table.setColumnCount(len(next(iter(table.values()))))
         statistics_table.setRowCount(len(table))
     except StopIteration:
         pass
+    update_table_gui(statistics_table, table)
+
+def update_table_gui(statistics_table, table, minimum_value=0.0, maximum_value=1.0):
+    statistics_table.clear()
+
 
     for i, column in enumerate(table.keys()):
-        statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(column))
+        statistics_table.setVerticalHeaderItem(i, QTableWidgetItem(str(i + 1) + " " + column))
 
         for j, value in enumerate(table.get(column)):
             item = QTableWidgetItem("{:.3f}".format(value))
             if not np.isnan(value):
                 brush = QBrush()
-                rel_value = value / np.max([table[key][j] for key in table.keys()])
+                rel_value = (value - minimum_value) / (maximum_value - minimum_value)
                 brush.setColor(QColor(int((1.0 - rel_value) * 255), int(rel_value * 255), int((1.0 - rel_value) * 255), 255 ))
                 item.setBackground(brush.color())
                 item.setForeground(QColor(0,0,0,255))
             statistics_table.setItem(i, j, item)
+        statistics_table.setColumnWidth(i, 40)
 
 
 

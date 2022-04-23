@@ -98,6 +98,15 @@ If classification worked well, it may for example look like this. Note the two t
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classification_result.png)
 
+### Classifier statistics and correlation matrix
+After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show correlation matrix`.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/correlation_matrix2.png)
+
+This can help understanding how the classifier works. Furthermore, you can accelerate the classifier by reducing the number of correlated features.
+
+
+
 A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
 
 ### Object classification from custom measurements
@@ -131,6 +140,12 @@ After labels have been measured, you can start the `Object Classifier (custom pr
 9. Click on `Run` to start training and prediction.
 
 You can also train those classifiers from Python and reuse them: [Read more about using the TableRowClassifier from python](https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/27_cell_classification/apoc_simpleitk_object_classification.html)
+
+### Classifier statistics and correlation matrix
+After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show correlation matrix`.
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/correlation_matrix.png)
+
+This can help understanding how the classifier works. Furthermore, you can accelerate the classifier by reducing the number of correlated features.
 
 ----------------------------------
 

@@ -211,7 +211,8 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             centroid_distance_to_nearest_neighbor:bool = False,
                             average_centroid_distance_to_6_nearest_neighbors:bool = False,
                             average_centroid_distance_to_10_nearest_neighbors:bool = False,
-                            show_classifier_statistics = False,
+                            show_classifier_statistics=False,
+                            show_correlation_matrix=False,
                             viewer : "napari.Viewer" = None
                             ) -> "napari.types.LabelsData":
 
@@ -265,8 +266,21 @@ def Train_object_classifier(image: "napari.types.ImageData",
         from ._dock_widget import update_model_analysis
         table = QTableWidget()
         update_model_analysis(table, clf)
-        viewer.window.add_dock_widget(table)
-    
+        viewer.window.add_dock_widget(table, name="Classifier statistics")
+
+    if show_correlation_matrix and viewer is not None:
+        table = QTableWidget()
+        from ._dock_widget import update_table_gui
+        import pandas as pd
+        correlation_matrix = pd.DataFrame(clf._data).dropna().corr()
+
+        table.setColumnCount(len(correlation_matrix))
+        table.setRowCount(len(correlation_matrix))
+
+        update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
+        viewer.window.add_dock_widget(table, name="Correlation matrix")
+
+
     return result
 
 @register_function(menu="Segmentation post-processing > Object classification (apply pretrained, APOC)")

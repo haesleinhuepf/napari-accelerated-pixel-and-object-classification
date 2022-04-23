@@ -18,6 +18,7 @@ from qtpy.QtWidgets import (
     QWidget,
     QSpinBox,
     QCheckBox,
+    QTableWidget,
 )
 from magicgui.widgets import FileEdit
 from magicgui.types import FileDialogMode
@@ -104,6 +105,10 @@ class CustomObjectClassifierWidget(QWidget):
         show_classifier_statistics_checkbox = QCheckBox("Show classifier statistics")
         show_classifier_statistics_checkbox.setChecked(False)
 
+        # show correlation matrix
+        show_correlation_matrix_checkbox = QCheckBox("Show correlation matrix")
+        show_correlation_matrix_checkbox.setChecked(False)
+
         # Run button
         run_container = QWidget()
         run_container.setLayout(QHBoxLayout())
@@ -127,6 +132,7 @@ class CustomObjectClassifierWidget(QWidget):
         self.layout().addWidget(self.custom_name_container)
         self.layout().addWidget(show_results_as_table)
         self.layout().addWidget(show_classifier_statistics_checkbox)
+        self.layout().addWidget(show_correlation_matrix_checkbox)
         self.layout().addWidget(run_container)
         self.layout().setSpacing(0)
 
@@ -154,6 +160,7 @@ class CustomObjectClassifierWidget(QWidget):
                 self.custom_name.text(),
                 show_results_as_table.isChecked(),
                 show_classifier_statistics_checkbox.isChecked(),
+                show_correlation_matrix_checkbox.isChecked(),
             )
 
         run_button.clicked.connect(run_clicked)
@@ -204,6 +211,7 @@ class CustomObjectClassifierWidget(QWidget):
         custom_name,
         show_results_as_table,
         show_classifier_statistics,
+        show_correlation_matrix,
     ):
         print("Selected labels layer: " + str(labels_layer))
         print("Selected annotation layer: " + str(annotation_layer))
@@ -244,11 +252,22 @@ class CustomObjectClassifierWidget(QWidget):
             add_table(labels_layer, self.viewer)
 
         if show_classifier_statistics and self.viewer is not None:
-            from qtpy.QtWidgets import QTableWidget
+
             from ._dock_widget import update_model_analysis
             table = QTableWidget()
             update_model_analysis(table, classifier)
-            self.viewer.window.add_dock_widget(table)
+            self.viewer.window.add_dock_widget(table, name="Classifier statistics")
+
+        if show_correlation_matrix and self.viewer is not None:
+            table = QTableWidget()
+            from ._dock_widget import update_table_gui
+            correlation_matrix = pd.DataFrame(selected_properties).dropna().corr()
+
+            table.setColumnCount(len(correlation_matrix))
+            table.setRowCount(len(correlation_matrix))
+
+            update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
+            self.viewer.window.add_dock_widget(table, name="Correlation matrix")
 
     def _add_to_viewer(self, name, data):
         try:
