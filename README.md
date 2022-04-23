@@ -101,7 +101,7 @@ If classification worked well, it may for example look like this. Note the two t
 ### Classifier statistics and correlation matrix
 After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show correlation matrix`.
 
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/correlation_matrix2.png)
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/correlation_matrix2.png)
 
 This can help understanding how the classifier works. Furthermore, you can accelerate the classifier by reducing the number of correlated features.
 
