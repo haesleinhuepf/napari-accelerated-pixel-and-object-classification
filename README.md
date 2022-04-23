@@ -87,6 +87,38 @@ If classification worked well, it may for example look like this. Note the two t
 
 A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
 
+### Object classification from custom measurements
+
+You can also classify labeled objects according to custom measurements. For deriving those measurements, you can use these napari plugins:
+
+* [morphometrics](https://www.napari-hub.org/plugins/morphometrics)
+* [PartSeg](https://www.napari-hub.org/plugins/PartSeg)
+* [napari-simpleitk-image-processing](https://www.napari-hub.org/plugins/napari-simpleitk-image-processing)
+* [napari-cupy-image-processing](https://www.napari-hub.org/plugins/napari-cupy-image-processing)
+* [napari-pyclesperanto-assistant](https://www.napari-hub.org/plugins/napari-pyclesperanto-assistant)
+* [napari-skimage-regionprops](https://www.napari-hub.org/plugins/napari-skimage-regionprops)
+
+Furthermore, if you use napari from Python, you can also create a dictionary or pandas DataFrame with measurements and store it in the `labels_layer.features` to make them available in the object classifier.
+
+After labels have been measured, you can start the `Object Classifier (custom properties, APOC)` from the `Tools > Segmentation post-processing` menu:
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/table_row_classifier_gui.png)
+
+1. Select the labels layers that has been measured.
+2. The annotation layer should contain manual annotations of object classes. 
+   You can draw lines crossing single and multiple objects of the same kind. 
+   For example draw a line through some elongated objects with label "1" and another line through some rather roundish objects with label "2".
+   If these lines touch the background, that will be ignored.
+3. Select the measurements / features that should be used for object classification.
+4. Use the `Update Measurements` button in case you did new measurements after Object classifier dialog was opened.
+5. Enter the filename of the classifier to be trained here. This file will be overwritten in case it existed already.
+6. Tree depth and number of trees allow you to fine-tune how to deal with manifold objects of different characteristics. The higher these numbers, the longer classification will take. In case you use many features, high depth and number of trees might be necessary. (See also `max_depth` and `n_estimators` in the [scikit-learn documentation of the Random Forest Classifier](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.RandomForestClassifier.html).
+7. The classification result will be stored under this name in the labels-layer's properties.
+8. Choose if the results table should be shown. Choose if classifier statistics should be shown. [Read more about classifier statistics](https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/27_cell_classification/forest_statistics.html).
+9. Click on `Run` to start training and prediction.
+
+You can also train those classifiers from Python and reuse them: [Read more about using the TableRowClassifier from python](https://haesleinhuepf.github.io/BioImageAnalysisNotebooks/27_cell_classification/apoc_simpleitk_object_classification.html)
+
 ----------------------------------
 
 This [napari] plugin was generated with [Cookiecutter] using with [@napari]'s [cookiecutter-napari-plugin] template.
