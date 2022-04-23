@@ -100,7 +100,7 @@ class ObjectSegmentation(QWidget):
         #feature_selection_button = QPushButton("Select features")
         #training_widget.layout().addWidget(feature_selection_button)
 
-        self.feature_selector = FeatureSelector(PredefinedFeatureSet.small_dog_log.value)
+        self.feature_selector = FeatureSelector(PredefinedFeatureSet.v070.value)
         collabsible.addWidget(self.feature_selector)
         collabsible.setDuration(0)
         set_border(collabsible)
