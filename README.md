@@ -12,7 +12,7 @@
 [clesperanto](https://github.com/clEsperanto/pyclesperanto_prototype) meets [scikit-learn](https://scikit-learn.org/stable/) to classify pixels and objects in images, on a [GPU](https://en.wikipedia.org/wiki/Graphics_processing_unit) using [OpenCL](https://www.khronos.org/opencl/) in [napari].
 
 ![](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/screencast.gif)
-The processed example image was kindly acquired by Daniela Vorkel, Myers lab, MPI-CBG / CSBD
+The processed example image was kindly acquired by Daniela Vorkel, Myers lab, MPI-CBG / CSBD ([Download full video](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/demo_lund.mp4))
 
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
 Training classifiers from pairs of image and label-mask folders is explained in 
