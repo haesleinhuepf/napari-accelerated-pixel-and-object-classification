@@ -57,6 +57,21 @@ You can use this code for example to apply the same classifier to a folder of im
 A pre-trained classifier can be [applied from scripts as shown in the example notebook]() or from the `Tools > Segmentation / labeling > Object segmentation (apply pretrained, APOC)`.
 The tools for generating semantic segmentations and probability maps (`Tools > Filtering` menu) work analogously.
 
+### Classifier statistics
+
+While training, you can also activate the `Show classifier statistics` checkbox. 
+When doing so, it is recommended to increase the number of trees so that the measurements are more reliable, especially when selecting many features.
+This will open a small table after training where you can see how large the share of decision trees are for each analysed feature image.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/classifier_statistics.png)
+
+It is recommended to turn on/off the features that hold a very large share or a very small share of trees in the random forest. 
+Retrain the classifier to see how the features influence the decision making.
+
+Note: Multiple of these parameters may be correlated. 
+If you select 11 feature images, which all allow to make the pixel classification similarly, but 10 of those are correlated, these 10 may appear with a share of about 0.05 while the 11th parameter has a share of 0.5. 
+Thus, study these values with care.
+
 ### Object classification
 
 Click the menu `Tools > Segmentation post-processing > Object classification (APOC)`. 
