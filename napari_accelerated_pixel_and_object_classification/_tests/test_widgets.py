@@ -49,7 +49,8 @@ def test_pixel_training_and_prediction(make_napari_viewer):
             segmenter.feature_selector.getFeatures(),
             2,
             10,
-            classifier_filename
+            classifier_filename,
+            False
         )
 
         segmenter.predict(
