@@ -380,7 +380,6 @@ class ObjectSegmentation(QWidget):
 
     def update_image_list(self):
         selected_images = self.get_selected_images()
-        print("selected images was:", selected_images)
 
         self._available_images = []
         self.image_list.clear()
@@ -396,8 +395,7 @@ class ObjectSegmentation(QWidget):
                     item.setSelected(True)
 
         selected_images = self.get_selected_images()
-        print("selected images is:", selected_images)
-
+        
     def get_selected_images(self):
         images = []
         if not hasattr(self, "_available_images"):
