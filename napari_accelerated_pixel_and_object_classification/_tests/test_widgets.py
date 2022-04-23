@@ -96,3 +96,13 @@ if __name__ == "__main__":
     test_object_training_and_prediction(napari.Viewer)
     test_feature_selector()
     test_pixel_training_and_prediction(napari.Viewer)
+
+def test_custom_object_classifier(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._custom_table_row_classifier import CustomObjectClassifierWidget
+
+    classifier = CustomObjectClassifierWidget(viewer)
+
+    viewer.window.add_dock_widget(classifier)
+    
