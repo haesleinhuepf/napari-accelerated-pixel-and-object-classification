@@ -170,6 +170,16 @@ If your conda environment is set up, you can install `napari-accelerated-pixel-a
 conda install -c conda-forge pyopencl
 pip install napari-accelerated-pixel-and-object-classification
 ```
+
+Mac-users please also install this:
+
+    conda install -c conda-forge ocl_icd_wrapper_apple
+    
+Linux users please also install this:
+    
+    conda install -c conda-forge ocl-icd-system
+
+
 ## Contributing
  
 Contributions, feedback and suggestions are very welcome. Tests can be run with [tox], please ensure
