@@ -100,7 +100,7 @@ class ObjectSegmentation(QWidget):
         #feature_selection_button = QPushButton("Select features")
         #training_widget.layout().addWidget(feature_selection_button)
 
-        self.feature_selector = FeatureSelector(PredefinedFeatureSet.v070.value)
+        self.feature_selector = FeatureSelector(self, PredefinedFeatureSet.v070.value)
         collabsible.addWidget(self.feature_selector)
         collabsible.setDuration(0)
         set_border(collabsible)
@@ -470,8 +470,8 @@ class ProbabilityMapping(ObjectSegmentation):
 
 
 class FeatureSelector(QWidget):
-    def __init__(self, feature_definition:str):
-        super().__init__()
+    def __init__(self, parent, feature_definition:str):
+        super().__init__(parent)
         self.setLayout(QVBoxLayout())
         self.feature_definition = " " + feature_definition.lower() + " "
 

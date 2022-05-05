@@ -16,7 +16,6 @@ def test_training(make_napari_viewer):
         Apply_object_segmentation_to_visible_image_layers,\
         Apply_pixel_classification_to_visible_image_layers
     import apoc
-    Connected_component_labeling
 
     image = np.asarray([
         [0,0,1,1],
