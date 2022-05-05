@@ -98,16 +98,23 @@ If classification worked well, it may for example look like this. Note the two t
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classification_result.png)
 
-### Classifier statistics and correlation matrix
-After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show correlation matrix`.
+A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
+
+### Feature correlation matrix
+
+When training object classifiers it is crucial to investigate to which degree features are correlated and select the right, ideally uncorrelated features to classify objects robustly.
+After measuring features with any compatible napari plugin listed below, you can visualize the feature correlation matrix using the menu `Tools > Measurement > Show feature correlation matrix (pandas, APOC)` and by selecting the labels layer which has been analyzed.
+Before computing the correlation matrix, all rows containing [NaN](https://en.wikipedia.org/wiki/NaN) values are removed.
+For further details, please refer to the [documentation of the underlying function in pandas](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html).
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/feature_correlation_matrix.png)
+
+### Classifier statistics
+After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show feature correlation matrix`.
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/correlation_matrix2.png)
 
 This can help understanding how the classifier works. Furthermore, you can accelerate the classifier by reducing the number of correlated features.
-
-
-
-A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
 
 ### Object classification from custom measurements
 
