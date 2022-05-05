@@ -9,12 +9,13 @@ def test_training(make_napari_viewer):
         Train_object_segmentation_from_visible_image_layers,\
         Train_pixel_classifier_from_visible_image_layers,\
         Connected_component_labeling,\
-        Apply_object_classification,\
         Apply_pixel_classification,\
         Apply_object_segmentation,\
         Apply_probability_mapper,\
         Apply_object_segmentation_to_visible_image_layers,\
         Apply_pixel_classification_to_visible_image_layers
+        # Apply_object_classification,\
+
     import apoc
 
     image = np.asarray([
