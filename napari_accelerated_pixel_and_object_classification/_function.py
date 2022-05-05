@@ -261,24 +261,24 @@ def Train_object_classifier(image: "napari.types.ImageData",
                 print(key, type(item), item.shape)
             layer.properties = clf._data
 
-    if show_classifier_statistics and viewer is not None:
-        from qtpy.QtWidgets import QTableWidget
-        from ._dock_widget import update_model_analysis
-        table = QTableWidget()
-        update_model_analysis(table, clf)
-        viewer.window.add_dock_widget(table, name="Classifier statistics")
+        if show_classifier_statistics:
+            from qtpy.QtWidgets import QTableWidget
+            from ._dock_widget import update_model_analysis
+            table = QTableWidget()
+            update_model_analysis(table, clf)
+            viewer.window.add_dock_widget(table, name="Classifier statistics")
 
-    if show_correlation_matrix and viewer is not None:
-        table = QTableWidget()
-        from ._dock_widget import update_table_gui
-        import pandas as pd
-        correlation_matrix = pd.DataFrame(clf._data).dropna().corr()
+        if show_correlation_matrix:
+            table = QTableWidget()
+            from ._dock_widget import update_table_gui
+            import pandas as pd
+            correlation_matrix = pd.DataFrame(clf._data).dropna().corr()
 
-        table.setColumnCount(len(correlation_matrix))
-        table.setRowCount(len(correlation_matrix))
+            table.setColumnCount(len(correlation_matrix))
+            table.setRowCount(len(correlation_matrix))
 
-        update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
-        viewer.window.add_dock_widget(table, name="Correlation matrix")
+            update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
+            viewer.window.add_dock_widget(table, name="Correlation matrix")
 
 
     return result
