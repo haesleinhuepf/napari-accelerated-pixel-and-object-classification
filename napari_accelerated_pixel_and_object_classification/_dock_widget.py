@@ -454,7 +454,7 @@ def update_table_gui(statistics_table, table, minimum_value=0.0, maximum_value=1
                 item.setBackground(brush.color())
                 item.setForeground(QColor(0,0,0,255))
             statistics_table.setItem(i, j, item)
-        statistics_table.setColumnWidth(i, 40)
+        statistics_table.setColumnWidth(i, 60)
 
 
 
