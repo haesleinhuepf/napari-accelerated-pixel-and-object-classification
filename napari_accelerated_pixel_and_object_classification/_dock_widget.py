@@ -100,7 +100,7 @@ class ObjectSegmentation(QWidget):
         #feature_selection_button = QPushButton("Select features")
         #training_widget.layout().addWidget(feature_selection_button)
 
-        self.feature_selector = FeatureSelector(PredefinedFeatureSet.v070.value)
+        self.feature_selector = FeatureSelector(self, PredefinedFeatureSet.v070.value)
         collabsible.addWidget(self.feature_selector)
         collabsible.setDuration(0)
         set_border(collabsible)
@@ -454,7 +454,7 @@ def update_table_gui(statistics_table, table, minimum_value=0.0, maximum_value=1
                 item.setBackground(brush.color())
                 item.setForeground(QColor(0,0,0,255))
             statistics_table.setItem(i, j, item)
-        statistics_table.setColumnWidth(i, 40)
+        statistics_table.setColumnWidth(i, 60)
 
 
 
@@ -470,8 +470,8 @@ class ProbabilityMapping(ObjectSegmentation):
 
 
 class FeatureSelector(QWidget):
-    def __init__(self, feature_definition:str):
-        super().__init__()
+    def __init__(self, parent, feature_definition:str):
+        super().__init__(parent)
         self.setLayout(QVBoxLayout())
         self.feature_definition = " " + feature_definition.lower() + " "
 

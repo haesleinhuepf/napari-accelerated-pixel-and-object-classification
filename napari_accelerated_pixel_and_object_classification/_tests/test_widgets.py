@@ -82,10 +82,12 @@ def test_object_training_and_prediction(make_napari_viewer):
 
     viewer.window.add_dock_widget(classifier)
 
-def test_feature_selector():
+def test_feature_selector(make_napari_viewer):
     from napari_accelerated_pixel_and_object_classification._dock_widget import FeatureSelector
 
-    f = FeatureSelector("original gaussian_blur=1")
+    viewer = make_napari_viewer()
+
+    f = FeatureSelector(viewer.window.qt_viewer, "original gaussian_blur=1")
     f._remove_feature("original")
     f._add_feature("original")
 

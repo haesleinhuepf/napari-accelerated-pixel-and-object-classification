@@ -8,6 +8,8 @@ from napari_time_slicer import time_slicer
 from napari_tools_menu import register_function, register_dock_widget
 from magicgui import magic_factory
 
+from qtpy.QtWidgets import QTableWidget
+
 @napari_hook_implementation
 def napari_experimental_provide_function():
     return [
@@ -212,7 +214,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             average_centroid_distance_to_6_nearest_neighbors:bool = False,
                             average_centroid_distance_to_10_nearest_neighbors:bool = False,
                             show_classifier_statistics=False,
-                            show_correlation_matrix=False,
+                            show_feature_correlation_matrix=False,
                             viewer : "napari.Viewer" = None
                             ) -> "napari.types.LabelsData":
 
@@ -261,27 +263,35 @@ def Train_object_classifier(image: "napari.types.ImageData",
                 print(key, type(item), item.shape)
             layer.properties = clf._data
 
-    if show_classifier_statistics and viewer is not None:
-        from qtpy.QtWidgets import QTableWidget
-        from ._dock_widget import update_model_analysis
-        table = QTableWidget()
-        update_model_analysis(table, clf)
-        viewer.window.add_dock_widget(table, name="Classifier statistics")
+            if show_feature_correlation_matrix:
+                show_feature_correlation_matrix(layer, viewer)
 
-    if show_correlation_matrix and viewer is not None:
-        table = QTableWidget()
-        from ._dock_widget import update_table_gui
-        import pandas as pd
-        correlation_matrix = pd.DataFrame(clf._data).dropna().corr()
+        if show_classifier_statistics:
+            from ._dock_widget import update_model_analysis
+            table = QTableWidget()
+            update_model_analysis(table, clf)
+            viewer.window.add_dock_widget(table, name="Classifier statistics")
 
+
+    return result
+
+
+@register_function(menu="Measurement > Feature correlation matrix (pandas, APOC)")
+def show_feature_correlation_matrix(layer: "napari.layers.Layer", viewer:napari.Viewer = None):
+    from ._dock_widget import update_table_gui
+    import pandas as pd
+    correlation_matrix = pd.DataFrame(layer.properties).dropna().corr()
+
+    if viewer is not None:
+        table = QTableWidget()
         table.setColumnCount(len(correlation_matrix))
         table.setRowCount(len(correlation_matrix))
 
         update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
-        viewer.window.add_dock_widget(table, name="Correlation matrix")
+        viewer.window.add_dock_widget(table, name="Feature correlation matrix")
+    else:
+        return correlation_matrix
 
-
-    return result
 
 @register_function(menu="Segmentation post-processing > Object classification (apply pretrained, APOC)")
 @time_slicer
