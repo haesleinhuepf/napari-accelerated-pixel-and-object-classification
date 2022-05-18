@@ -53,7 +53,7 @@ def Train_probability_mapper(
         output_probability_of_class : int = 2,
         max_depth : int = 2,
         num_ensembles : int = 10
-) -> "napari.types.LabelsData":
+) -> "napari.types.ImageData":
     feature_stack = featureset.value
     if feature_stack == "":
         feature_stack = custom_features
