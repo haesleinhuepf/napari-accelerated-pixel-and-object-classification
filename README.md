@@ -54,14 +54,23 @@ You can use this code for example to apply the same classifier to a folder of im
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/code_generation.png)
 
-A pre-trained classifier can be [applied from scripts as shown in the example notebook]() or from the `Tools > Segmentation / labeling > Object segmentation (apply pretrained, APOC)`.
+A pre-trained classifier can be [applied from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb) or from the `Tools > Segmentation / labeling > Object segmentation (apply pretrained, APOC)`.
+
+### Semantic segmentation
+
+Users can also generate semantic segmentation label images where the label identifier corresponds to a class the pixel has been allocated to. 
+The tool can be found in the menu `Tools > Segmentation / labeling > Semantic segmentation (APOC)`.
+It works analogously like the Object Segmenter, just without the need to specify the class identifier that objects correspond to.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/semantic_segmentation.png)
 
 ### Probability maps
 
-The tools for generating semantic segmentations and probability maps (`Tools > Filtering` menu) work analogously to the Object Segmenter. 
+The tool for generating probability maps (`Tools > Filtering > Probability Mapper (APOC)` menu) works analogously to the Object Segmenter as well. 
 The only difference is that the result image is not a label image but an intensity image where the intensity represents the probability (between 0 and 1)
 that a pixel belongs to a given class. In this example: The raw image (grey) has been annotated with three classes: background (black, label 1), foreground (white, label 2) and edges (grey, label 3).
 The probability mapper was configured to create probability image (shown in green) for edges (label 3):
+
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/probability_mapper.png)
 
 ### Classifier statistics
