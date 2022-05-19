@@ -463,7 +463,7 @@ class SemanticSegmentation(ObjectSegmentation):
     def __init__(self, napari_viewer):
         super().__init__(napari_viewer, classifier_class=PixelClassifier)
 
-@register_dock_widget(menu="Filtering > Probability mapper (APOC)")
+@register_dock_widget(menu="Filtering > Probability Mapper (APOC)")
 class ProbabilityMapping(ObjectSegmentation):
     def __init__(self, napari_viewer):
         super().__init__(napari_viewer, classifier_class=ProbabilityMapper)
