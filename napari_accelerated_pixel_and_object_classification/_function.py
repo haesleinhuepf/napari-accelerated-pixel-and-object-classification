@@ -32,7 +32,7 @@ def Train_pixel_classifier(
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
-        num_ensembles : int = 10
+        num_ensembles : int = 100
 ) -> "napari.types.LabelsData":
     feature_stack = featureset.value
     if feature_stack == "":
@@ -52,7 +52,7 @@ def Train_probability_mapper(
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         output_probability_of_class : int = 2,
         max_depth : int = 2,
-        num_ensembles : int = 10
+        num_ensembles : int = 100
 ) -> "napari.types.ImageData":
     feature_stack = featureset.value
     if feature_stack == "":
@@ -82,7 +82,7 @@ def Train_pixel_classifier_from_visible_image_layers(
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
-        num_ensembles : int = 10,
+        num_ensembles : int = 100,
         napari_viewer : napari.Viewer = None
 ) -> "napari.types.LabelsData":
     image = [layer.data for layer in napari_viewer.layers if (isinstance(layer, napari.layers.Image) and layer.visible)]
@@ -114,7 +114,7 @@ def Train_object_segmentation(
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
-        num_ensembles : int = 10,
+        num_ensembles : int = 100,
         annotated_object_intensity : int = 2
 ) -> "napari.types.LabelsData":
     feature_stack = featureset.value
@@ -153,7 +153,7 @@ def Train_object_segmentation_from_visible_image_layers(
         featureset : PredefinedFeatureSet = PredefinedFeatureSet.small_quick,
         custom_features : str = "original gaussian_blur=1 sobel_of_gaussian_blur=1",
         max_depth : int = 2,
-        num_ensembles : int = 10,
+        num_ensembles : int = 100,
         annotated_object_intensity : int = 2,
         napari_viewer : napari.Viewer = None
 ) -> "napari.types.LabelsData":
@@ -199,7 +199,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             annotation : "napari.types.LabelsData",
                             model_filename : "magicgui.types.PathLike" = "ObjectClassifier.cl",
                             max_depth : int = 2,
-                            num_ensembles : int = 10,
+                            num_ensembles : int = 100,
                             minimum_intensity: bool = False,
                             mean_intensity: bool = False,
                             maximum_intensity: bool = False,
