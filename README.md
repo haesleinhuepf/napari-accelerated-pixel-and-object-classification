@@ -56,6 +56,12 @@ You can use this code for example to apply the same classifier to a folder of im
 
 A pre-trained classifier can be [applied from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/demo_object_segmenter.ipynb) or from the `Tools > Segmentation / labeling > Object segmentation (apply pretrained, APOC)`.
 
+### Integration with the napari-assistant
+
+Pre-trained models can also be assembled to workflows using the [napari-assistant](https://www.napari-hub.org/plugins/napari-assistant). You find APOC-operations in the categories `Filter`, `Label` and `Label Filters`:
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/assistant.png)
+
 ### Semantic segmentation
 
 Users can also generate semantic segmentation label images where the label identifier corresponds to a class the pixel has been allocated to. 
