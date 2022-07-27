@@ -246,7 +246,7 @@ class ObjectSegmentation(QWidget):
               num_trees,
               filename,
               show_classifier_statistics,
-              scale,
+              scale=None,
     ):
         print("train " + str(self.classifier_class.__name__))
         print("num images", len(images))
@@ -306,7 +306,7 @@ class ObjectSegmentation(QWidget):
             else:
                 self.viewer.add_labels(data.astype(int), name=name, scale=scale)
 
-    def predict(self, images, filename, scale):
+    def predict(self, images, filename, scale=None):
         print("predict")
         print("num images", len(images))
         print("file", filename)

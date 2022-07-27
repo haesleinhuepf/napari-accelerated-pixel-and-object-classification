@@ -36,7 +36,7 @@ def test_pixel_training_and_prediction(make_napari_viewer):
 
         classifier_filename = "object_segmenter.cl"
 
-        viewer.add_image(image)
+        image_layer = viewer.add_image(image)
         viewer.add_labels(labels)
 
         segmenter.timer.stop()
@@ -50,7 +50,8 @@ def test_pixel_training_and_prediction(make_napari_viewer):
             2,
             10,
             classifier_filename,
-            False
+            False,
+            image_layer.scale
         )
 
         segmenter.predict(
