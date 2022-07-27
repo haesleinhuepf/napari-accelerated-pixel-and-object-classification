@@ -151,6 +151,8 @@ class ObjectSegmentation(QWidget):
                 warnings.warn("Selected images and annotation must have the same dimensionality and size!")
                 return
 
+            first_image_layer = self.get_selected_images()[0]
+
             self.train(
                 self.get_selected_images_data(),
                 self.get_selected_annotation_data(),
@@ -160,6 +162,7 @@ class ObjectSegmentation(QWidget):
                 num_trees_spinner.value(),
                 str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/"),
                 show_classifier_statistics_checkbox.isChecked(),
+                first_image_layer.scale
             )
         button.clicked.connect(train_clicked)
         training_widget.layout().addWidget(button)
@@ -188,9 +191,12 @@ class ObjectSegmentation(QWidget):
                                    "segmenter = " + str(self.classifier_class.__name__) + "(opencl_filename='" + filename + "')\n\n" +
                                    "result = segmenter.predict(image=" + image_names + ")")
 
+            first_image_layer = self.get_selected_images()[0]
+
             self.predict(
                 self.get_selected_images_data(),
-                filename
+                filename,
+                first_image_layer.scale
             )
 
         button.clicked.connect(predict_clicked)
@@ -240,6 +246,7 @@ class ObjectSegmentation(QWidget):
               num_trees,
               filename,
               show_classifier_statistics,
+              scale=None,
     ):
         print("train " + str(self.classifier_class.__name__))
         print("num images", len(images))
@@ -282,14 +289,14 @@ class ObjectSegmentation(QWidget):
         print("Applying / prediction done.")
 
         short_filename = filename.split("/")[-1]
-        self._add_to_viewer("Result of " + short_filename, result)
+        self._add_to_viewer("Result of " + short_filename, result, scale)
 
         if show_classifier_statistics and self.viewer is not None:
             table = QTableWidget()
             update_model_analysis(table, classifier)
             self.viewer.window.add_dock_widget(table)
 
-    def _add_to_viewer(self, name, data):
+    def _add_to_viewer(self, name, data, scale=None):
         try:
             self.viewer.layers[name].data = data.astype(int)
             self.viewer.layers[name].visible = True
@@ -297,9 +304,9 @@ class ObjectSegmentation(QWidget):
             if self.classifier_class == ProbabilityMapper:
                 self.viewer.add_image(data, name=name)
             else:
-                self.viewer.add_labels(data.astype(int), name=name)
+                self.viewer.add_labels(data.astype(int), name=name, scale=scale)
 
-    def predict(self, images, filename):
+    def predict(self, images, filename, scale=None):
         print("predict")
         print("num images", len(images))
         print("file", filename)
@@ -320,7 +327,7 @@ class ObjectSegmentation(QWidget):
 
         short_filename = filename.split("/")[-1]
 
-        self._add_to_viewer("Result of " + short_filename, result)
+        self._add_to_viewer("Result of " + short_filename, result, scale=scale)
 
     def update_memory_consumption(self):
         number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]))
