@@ -80,3 +80,20 @@ def test_probability_mapper():
     import apoc
     Train_probability_mapper(image, labels, model_filename="file2.cl", featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
     Apply_probability_mapper(image, model_filename="file2.cl")
+
+def test_annotation_to_cluster_id():
+    import pyclesperanto_prototype as cle
+    from napari_accelerated_pixel_and_object_classification._function import annotation_to_cluster_id
+
+    labels = cle.push(np.asarray([
+        [1, 2],
+        [3, 3]]).astype(int))
+
+    annotation = cle.push(np.asarray([
+        [0, 1],
+        [2, 1]]).astype(int))
+
+    reference = [0, 1, 2]
+    result = annotation_to_cluster_id(labels, annotation)["ANNOTATION_CLUSTER_ID"]
+
+    assert np.array_equal(reference, result)
