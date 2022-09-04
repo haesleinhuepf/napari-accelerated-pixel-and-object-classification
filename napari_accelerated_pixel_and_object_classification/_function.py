@@ -315,3 +315,33 @@ def Apply_object_classification(image: "napari.types.ImageData",
     clf = ObjectClassifier(opencl_filename=model_filename)
     result = clf.predict(labels, image)
     return result
+
+@register_function(menu="Measurement > Annotation to cluster ID column (APOC)")
+def annotation_to_cluster_id(labels: "napari.types.LabelsData", annotation: "napari.types.LabelsData", name:str="ANNOTATION", viewer:napari.Viewer=None):
+    import pyclesperanto_prototype as cle
+    import pandas as pd
+    stats = cle.statistics_of_labelled_pixels(annotation, labels)
+
+    new_dict = {
+        "label": stats["label"],
+        name + "_CLUSTER_ID": stats["max_intensity"]
+    }
+
+    if viewer is not None:
+        # store the layer for saving results later
+        from napari_workflows._workflow import _get_layer_from_data
+        labels_layer = _get_layer_from_data(viewer, labels)
+
+        df1 = pd.DataFrame(labels_layer.features)
+        df2 = pd.DataFrame(new_dict)
+        if "label" in df1.keys():
+            df3 = pd.merge(df1, df2, how='inner', on='label')
+            labels_layer.features = df3.to_dict(orient='list')
+        else:
+            labels_layer.features = df2
+
+        # turn table into a widget
+        from napari_skimage_regionprops import add_table
+        add_table(labels_layer, viewer)
+    else:
+        return new_dict
