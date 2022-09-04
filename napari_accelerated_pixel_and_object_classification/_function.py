@@ -213,6 +213,10 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             centroid_distance_to_nearest_neighbor:bool = False,
                             average_centroid_distance_to_6_nearest_neighbors:bool = False,
                             average_centroid_distance_to_10_nearest_neighbors:bool = False,
+                            maximum_distance_of_touching_neighbors:bool = False,
+                            touch_count_sum:bool = False,
+                            minimum_touch_portion:bool = False,
+                            standard_deviation_touch_portion:bool = False,
                             show_classifier_statistics=False,
                             show_feature_correlation_matrix=False,
                             viewer : "napari.Viewer" = None
@@ -220,7 +224,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
 
     features = ","
     if pixel_count:
-        features = features + "area,"
+        features = features + "pixel_count,"
     if minimum_intensity:
         features = features + "min_intensity,"
     if mean_intensity:
@@ -245,6 +249,14 @@ def Train_object_classifier(image: "napari.types.ImageData",
         features = features + "average_distance_of_n_nearest_neighbors=6,"
     if average_centroid_distance_to_10_nearest_neighbors:
         features = features + "average_distance_of_n_nearest_neighbors=10,"
+    if maximum_distance_of_touching_neighbors:
+        features = features + "maximum_distance_of_touching_neighbors,"
+    if touch_count_sum:
+        features = features + "touch_count_sum,"
+    if minimum_touch_portion:
+        features = features + "minimum_touch_portion,"
+    if standard_deviation_touch_portion:
+        features = features + "standard_deviation_touch_portion,"
 
     # remove first and last comma
     features = features[1:-1]
