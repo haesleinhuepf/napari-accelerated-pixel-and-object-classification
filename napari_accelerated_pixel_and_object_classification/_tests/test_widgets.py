@@ -95,12 +95,6 @@ def test_feature_selector(make_napari_viewer):
     cb = f._make_checkbox("a", "b", True)
     cb.setChecked(False)
 
-if __name__ == "__main__":
-    import napari
-    test_object_training_and_prediction(napari.Viewer)
-    test_feature_selector()
-    test_pixel_training_and_prediction(napari.Viewer)
-
 def test_custom_object_classifier(make_napari_viewer):
     viewer = make_napari_viewer()
 

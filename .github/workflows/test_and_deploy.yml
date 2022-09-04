@@ -85,7 +85,9 @@ jobs:
       #    PLATFORM: ${{ matrix.platform }}
       - name: Test
         shell: bash -l {0}
-        run: pytest -v --cov=./ --cov-report=xml
+        # openCL tests need to be run before napari tests
+        run: pytest -v ./napari_accelerated_pixel_and_object_classification/functions/_tests .  --cov=./ --cov-report=xml
+        #run: pytest -v --cov=./ --cov-report=xml
 
       - name: Coverage
         uses: codecov/codecov-action@v1
