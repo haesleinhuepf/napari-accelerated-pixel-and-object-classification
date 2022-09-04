@@ -224,7 +224,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
 
     features = ","
     if pixel_count:
-        features = features + "pixel_count,"
+        features = features + "area,"
     if minimum_intensity:
         features = features + "min_intensity,"
     if mean_intensity:
