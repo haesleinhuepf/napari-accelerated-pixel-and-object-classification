@@ -3,5 +3,5 @@
 from setuptools import setup
 
 setup(
-    version='0.8.2'
+    version='0.9.0'
 )
