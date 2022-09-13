@@ -151,6 +151,10 @@ class ObjectSegmentation(QWidget):
                 warnings.warn("Selected images and annotation must have the same dimensionality and size!")
                 return
 
+            if len(self.get_selected_images()) == 0:
+                warnings.warn("Please select image/channel[s] to train on.")
+                return
+
             first_image_layer = self.get_selected_images()[0]
 
             self.train(
