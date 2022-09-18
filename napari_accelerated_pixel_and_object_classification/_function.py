@@ -320,23 +320,51 @@ def Apply_object_classification(image: "napari.types.ImageData",
 def annotation_to_cluster_id(labels: "napari.types.LabelsData", annotation: "napari.types.LabelsData", name:str="ANNOTATION", viewer:napari.Viewer=None):
     import pyclesperanto_prototype as cle
     import pandas as pd
-    stats = cle.statistics_of_labelled_pixels(annotation, labels)
 
-    new_dict = {
-        "label": stats["label"],
-        name + "_CLUSTER_ID": stats["max_intensity"]
-    }
+    if len(labels.shape) == 4:
+
+        new_dict = {
+            "label": [],
+            name + "_CLUSTER_ID": [],
+            "frame": []
+        }
+
+        for f in range(labels.shape[0]):
+            print("Reading IDs from frame", f)
+            labels_3d = labels[f]
+            if len(annotation.shape) == 4:
+                annotation_3d = annotation[f]
+            else:
+                annotation_3d = annotation
+
+            stats = cle.statistics_of_labelled_pixels(annotation_3d, labels_3d)
+
+            new_dict["label"].extend(stats["label"])
+            new_dict[name + "_CLUSTER_ID"].extend(stats["max_intensity"])
+            new_dict["frame"].extend([f] * len(stats["max_intensity"]))
+    else:
+        stats = cle.statistics_of_labelled_pixels(annotation, labels)
+
+        new_dict = {
+            "label": stats["label"],
+            name + "_CLUSTER_ID": stats["max_intensity"]
+        }
 
     if viewer is not None:
         # store the layer for saving results later
         from napari_workflows._workflow import _get_layer_from_data
         labels_layer = _get_layer_from_data(viewer, labels)
 
-        df1 = pd.DataFrame(labels_layer.features)
         df2 = pd.DataFrame(new_dict)
-        if "label" in df1.keys():
-            df3 = pd.merge(df1, df2, how='inner', on='label')
-            labels_layer.features = df3.to_dict(orient='list')
+
+        if labels_layer.features is not None:
+            df1 = pd.DataFrame(labels_layer.features)
+
+            if "label" in df1.keys():
+                df3 = pd.merge(df1, df2, how='inner', on='label')
+                labels_layer.features = df3.to_dict(orient='list')
+            else:
+                labels_layer.features = df2
         else:
             labels_layer.features = df2
 
@@ -345,3 +373,4 @@ def annotation_to_cluster_id(labels: "napari.types.LabelsData", annotation: "nap
         add_table(labels_layer, viewer)
     else:
         return new_dict
+
