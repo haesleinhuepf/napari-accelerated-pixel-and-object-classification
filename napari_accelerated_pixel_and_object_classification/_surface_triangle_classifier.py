@@ -197,7 +197,7 @@ class SurfaceVertexClassifierWidget(QWidget):
         # determine annotation classes
         annotated_classes = surface_layer.data[2]
         minimum = np.min(annotated_classes)
-        if minimum > 0:
+        if minimum != 0:
             print("As there are no 0 in the annotated classes, the minimum is subtracted")
             annotated_classes = np.asarray(annotated_classes)
             annotated_classes = annotated_classes - minimum
@@ -207,6 +207,8 @@ class SurfaceVertexClassifierWidget(QWidget):
         classifier = apoc.TableRowClassifier(opencl_filename=classifier_filename, max_depth=max_depth, num_ensembles=num_trees)
         classifier.train(selected_properties, annotated_classes)
         prediction = np.asarray(classifier.predict(selected_properties))
+
+        prediction = prediction + minimum
         print("RFC predictions finished.", prediction)
 
         # write result back to features/properties of the surface layer
@@ -222,8 +224,8 @@ class SurfaceVertexClassifierWidget(QWidget):
         data = [np.asarray(data[0]).copy(), np.asarray(data[1]).copy(), prediction]
 
         new_layer = self.viewer.add_surface(data, name=selected_column)
-        new_layer.contrast_limits = [np.min(surface_layer.features[selected_column]), np.max(surface_layer.features[selected_column])]
-        new_layer.colormap = "jet"
+        new_layer.contrast_limits = list(surface_layer.contrast_limits)
+        new_layer.colormap = "hsv"
 
         if show_results_as_table:
             # show region properties table as a new widget
