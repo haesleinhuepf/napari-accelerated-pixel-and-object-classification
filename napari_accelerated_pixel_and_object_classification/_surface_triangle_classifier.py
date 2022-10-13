@@ -149,6 +149,7 @@ class SurfaceTriangleClassifierWidget(QWidget):
                 item.layout().setSpacing(0)
                 item.layout().setContentsMargins(3, 3, 3, 3)
 
+        self.update_properties_list()
 
     def update_properties_list(self):
         selected_layer = self.surface_select.value
@@ -186,6 +187,7 @@ class SurfaceTriangleClassifierWidget(QWidget):
         print("Selected surface layer: " + str(surface_layer))
         print("Selected measurements: " + str(selected_measurements_list))
 
+        from ._custom_table_row_classifier import get_layer_tabular_data
         features = get_layer_tabular_data(surface_layer)
 
         # only select the columns the user requested
@@ -194,25 +196,32 @@ class SurfaceTriangleClassifierWidget(QWidget):
 
         # determine annotation classes
         annotated_classes = surface_layer.data[2]
+        minimum = np.min(annotated_classes)
+        if minimum > 0:
+            print("As there are no 0 in the annotated classes, the minimum is subtracted")
+            annotated_classes = np.asarray(annotated_classes)
+            annotated_classes = annotated_classes - minimum
         print("annotated classes", annotated_classes)
 
         import apoc
         classifier = apoc.TableRowClassifier(opencl_filename=classifier_filename, max_depth=max_depth, num_ensembles=num_trees)
         classifier.train(selected_properties, annotated_classes)
-        prediction = np.asarray(classifier.predict(selected_properties)).tolist()
-        print("RFC predictions finished.")
+        prediction = np.asarray(classifier.predict(selected_properties))
+        print("RFC predictions finished.", prediction)
 
         # write result back to features/properties of the surface layer
         from ._custom_table_row_classifier import add_column_to_layer_tabular_data
+
+        selected_column = custom_name + "_CLUSTER_ID"
+
         add_column_to_layer_tabular_data(
-            surface_layer, custom_name + "_CLUSTER_ID", prediction
+            surface_layer, selected_column, prediction
         )
 
         data = surface_layer.data
         data = [np.asarray(data[0]).copy(), np.asarray(data[1]).copy(), prediction]
 
-        new_layer = self.viewer.add_surface(data,
-                                             name=custom_name + "_CLUSTER_ID")
+        new_layer = self.viewer.add_surface(data, name=selected_column)
         new_layer.contrast_limits = [np.min(self._table[selected_column]), np.max(self._table[selected_column])]
         new_layer.colormap = "jet"
 
