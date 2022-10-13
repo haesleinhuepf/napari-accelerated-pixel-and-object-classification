@@ -131,6 +131,17 @@ For further details, please refer to the [documentation of the underlying functi
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/feature_correlation_matrix.png)
 
+### Surface Vertex Classification (SVeC)
+
+When using napari-APOC in combination with [napari-process-points-and-surfaces](https://github.com/haesleinhuepf/napari-process-points-and-surfaces), 
+one can also classify vertices. Therefore, use for example the menu `Measurement > Surface quality table (vedo, nppas)`
+and the menu `Surfaces > Annotate surface manually (nppas)` for manual annotations. It is recommended to annotate the entire surface with value 1 as background, and specific regions of interest with integer numbers > 1.
+After measurements have been extracted and annotations were made, start SVeC from the `Surfaces > Surface vertex classification (custom properties, APOC)` menu. It can be used like the Object Classifier explained above.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/demo_vertex_classification.gif)
+
+[Download full video](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/demo_vertex_classification.mp4)
+
 ### Classifier statistics
 After classifier training, you can study the share of the individual features/measurements and how they are correlated by activating the checkboxes `Show classifier statistics` and `Show feature correlation matrix`.
 
