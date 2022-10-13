@@ -25,8 +25,8 @@ from magicgui.types import FileDialogMode
 import pandas as pd
 import numpy as np
 
-@register_dock_widget(menu="Surfaces > Surface triangle classification (custom properties, APOC)")
-class SurfaceTriangleClassifierWidget(QWidget):
+@register_dock_widget(menu="Surfaces > Surface vertex classification (custom properties, APOC)")
+class SurfaceVertexClassifierWidget(QWidget):
 
     def __init__(self, napari_viewer):
         super().__init__()
@@ -160,7 +160,7 @@ class SurfaceTriangleClassifierWidget(QWidget):
             if features is not None:
                 self.properties_list.clear()
                 for p in list(features.keys()):
-                    if "label" in p or "CLUSTER_ID" in p or "index" in p or "triangle_index" in p:
+                    if "label" in p or "CLUSTER_ID" in p or "index" in p or "vertex_index" in p:
                         continue
                     item = QListWidgetItem(p)
                     self.properties_list.addItem(item)
@@ -222,7 +222,7 @@ class SurfaceTriangleClassifierWidget(QWidget):
         data = [np.asarray(data[0]).copy(), np.asarray(data[1]).copy(), prediction]
 
         new_layer = self.viewer.add_surface(data, name=selected_column)
-        new_layer.contrast_limits = [np.min(self._table[selected_column]), np.max(self._table[selected_column])]
+        new_layer.contrast_limits = [np.min(surface_layer.features[selected_column]), np.max(surface_layer.features[selected_column])]
         new_layer.colormap = "jet"
 
         if show_results_as_table:
