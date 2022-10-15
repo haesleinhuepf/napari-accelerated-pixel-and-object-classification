@@ -21,6 +21,7 @@ import napari
 
 from apoc import PredefinedFeatureSet, ObjectSegmenter, PixelClassifier, ProbabilityMapper
 from napari_tools_menu import register_dock_widget
+from ._surface_vertex_classifier import SurfaceVertexClassifierWidget
 
 @register_dock_widget(menu="Segmentation / labeling > Object segmentation (APOC)")
 class ObjectSegmentation(QWidget):
