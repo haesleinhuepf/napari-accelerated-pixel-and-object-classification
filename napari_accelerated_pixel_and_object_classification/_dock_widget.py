@@ -556,7 +556,8 @@ def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
     from ._function import Train_object_classifier
     from ._custom_table_row_classifier import CustomObjectClassifierWidget
-    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier, CustomObjectClassifierWidget]
+    from ._object_merger import Train_object_merger
+    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier, CustomObjectClassifierWidget, Train_object_merger]
 
 
 def set_border(widget:QWidget, spacing=2, margin=0):

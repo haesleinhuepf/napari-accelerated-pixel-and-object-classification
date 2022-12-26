@@ -34,7 +34,7 @@ def Train_object_merger(image: "napari.types.ImageData",
         features = features + "touch_count,"
     if centroid_distance:
         features = features + "centroid_distance,"
-    
+
     # remove first and last comma
     features = features[1:-1]
 

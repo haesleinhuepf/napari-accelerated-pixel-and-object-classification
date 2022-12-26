@@ -25,7 +25,7 @@ def napari_experimental_provide_function():
         Train_pixel_classifier_from_visible_image_layers,
         Apply_pixel_classification_to_visible_image_layers,
         Connected_component_labeling, Apply_object_classification,
-        Train_object_merger, Apply_object_merger]
+        Apply_object_merger]
 
 def Train_pixel_classifier(
         image: "napari.types.ImageData",
