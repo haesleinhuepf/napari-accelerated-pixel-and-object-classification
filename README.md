@@ -102,6 +102,9 @@ Select which features should be considered for merging:
 * `touch_portion`: The relative amount an object touches another. E.g. in a symmetric, honey-comb like tissue, neighboring cells have a touch-portion of `1/6` to each other.
 * `touch_count`: The number of pixels where object touch. When using this parameter, make sure that images used for training and prediction have the same voxel size.
 * `mean_touch_intensity`: The mean average intensity between touching objects. When using this parameter, make sure images used for training and prediction are normalized the same way.
+* `centroid_distance`: The distance (in pixels or voxels) between centroids of labeled objects. 
+
+Note: most features are recommended to be used in isotropic images only.
 
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/merge_objects1.png)
 

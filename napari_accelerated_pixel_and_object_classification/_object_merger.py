@@ -19,6 +19,7 @@ def Train_object_merger(image: "napari.types.ImageData",
                         mean_touch_intensity: bool = True,
                         touch_portion: bool = True,
                         touch_count: bool = False,
+                        centroid_distance: bool = False,
                         show_classifier_statistics=False,
                         viewer : "napari.Viewer" = None
                         ) -> "napari.types.LabelsData":
@@ -31,7 +32,9 @@ def Train_object_merger(image: "napari.types.ImageData",
         features = features + "touch_portion,"
     if touch_count:
         features = features + "touch_count,"
-
+    if centroid_distance:
+        features = features + "centroid_distance,"
+    
     # remove first and last comma
     features = features[1:-1]
 
