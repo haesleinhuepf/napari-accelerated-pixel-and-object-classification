@@ -7,6 +7,7 @@ import napari
 from napari_time_slicer import time_slicer
 from napari_tools_menu import register_function, register_dock_widget
 from magicgui import magic_factory
+from ._object_merger import Train_object_merger, Apply_object_merger
 
 from qtpy.QtWidgets import QTableWidget
 
@@ -23,7 +24,8 @@ def napari_experimental_provide_function():
         Apply_pixel_classification,
         Train_pixel_classifier_from_visible_image_layers,
         Apply_pixel_classification_to_visible_image_layers,
-        Connected_component_labeling, Apply_object_classification]
+        Connected_component_labeling, Apply_object_classification,
+        Train_object_merger, Apply_object_merger]
 
 def Train_pixel_classifier(
         image: "napari.types.ImageData",

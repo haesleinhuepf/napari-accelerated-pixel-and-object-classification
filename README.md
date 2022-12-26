@@ -94,6 +94,21 @@ Note: Multiple of these parameters may be correlated.
 If you select 11 feature images, which all allow to make the pixel classification similarly, but 10 of those are correlated, these 10 may appear with a share of about 0.05 while the 11th parameter has a share of 0.5. 
 Thus, study these values with care.
 
+### Merging objects
+
+After segmentation, you can merge labeled objects using the `Tools > Segmentation post-processing > Merge objects (APOC)` menu. 
+Annotate label edges that should be merged with intensity 1 and those which should be kept with intensity 2 in a blank label image.
+Select which features should be considered for merging:
+* `touch_portion`: The relative amount an object touches another. E.g. in a symmetric, honey-comb like tissue, neighboring cells have a touch-portion of `1/6` to each other.
+* `touch_count`: The number of pixels where object touch. When using this parameter, make sure that images used for training and prediction have the same voxel size.
+* `mean_touch_intensity`: The mean average intensity between touching objects. When using this parameter, make sure images used for training and prediction are normalized the same way.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/merge_objects1.png)
+
+For training, use an image with equivalized intensity (1), an over-segmented label image (2) and annotations (3). When drawing annotations in a new labels layer, make sure to misguide the algorithm draw on edges of touching objects a 1 if those should be merged and a 2 if they should be kept. Make sure there are no 1/2 annotation circles on both: labels which should be merged and kept.
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/merge_objects2.png)
+
 ### Object classification
 
 Click the menu `Tools > Segmentation post-processing > Object classification (APOC)`. 
