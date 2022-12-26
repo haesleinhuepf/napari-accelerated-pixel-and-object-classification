@@ -106,11 +106,11 @@ Select which features should be considered for merging:
 
 Note: most features are recommended to be used in isotropic images only.
 
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/merge_objects1.png)
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/merge_objects1.png)
 
 For training, use an image with equivalized intensity (1), an over-segmented label image (2) and annotations (3). When drawing annotations in a new labels layer, make sure to misguide the algorithm draw on edges of touching objects a 1 if those should be merged and a 2 if they should be kept. Make sure there are no 1/2 annotation circles on both: labels which should be merged and kept.
 
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/images/merge_objects2.png)
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/merge_objects2.png)
 
 ### Object classification
 
