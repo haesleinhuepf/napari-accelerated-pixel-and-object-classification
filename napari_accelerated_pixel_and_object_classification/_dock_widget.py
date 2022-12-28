@@ -324,7 +324,7 @@ class ObjectSegmentation(QWidget):
 
         short_filename = filename.split("/")[-1]
 
-        self._add_to_viewer("Result of " + short_filename, result, scale=scale)
+        _add_to_viewer(self.viewer, self.classifier_class == ProbabilityMapper, "Result of " + short_filename, result, scale)
 
     def update_memory_consumption(self):
         number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]))

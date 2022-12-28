@@ -184,11 +184,13 @@ class ObjectClassification(QWidget):
 
             from ._function import Train_object_classifier
 
+            filename = str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/")
+
             result = _train_classifier(
                 self.image_select.value.data,
                 self.labels_select.value.data,
                 self.annotation_select.value.data,
-                str(filename_edit.value.absolute()).replace("\\", "/").replace("//", "/"),
+                filename,
                 num_max_depth_spinner.value(),
                 num_trees_spinner.value(),
                 minimum_intensity.value,
@@ -213,7 +215,9 @@ class ObjectClassification(QWidget):
                 classifier_class=self.classifier_class,
                 positive_class_identifier=num_object_annotation_spinner.value(),
             )
-            _add_to_viewer(self.viewer, False, "Result of " + str(self.classifier_class.__name__), result, self.image_select.value.scale)
+
+            short_filename = filename.split("/")[-1]
+            _add_to_viewer(self.viewer, False, "Result of " + short_filename, result, self.image_select.value.scale)
 
         button.clicked.connect(train_clicked)
         training_widget.layout().addWidget(button)
@@ -248,7 +252,9 @@ class ObjectClassification(QWidget):
                 self.labels_select.value.data,
                 filename
             )
-            _add_to_viewer(self.viewer, False, "Result of " + str(self.classifier_class.__name__), result, self.image_select.value.scale)
+
+            short_filename = filename.split("/")[-1]
+            _add_to_viewer(self.viewer, False, "Result of " + short_filename, result, self.image_select.value.scale)
 
         button.clicked.connect(predict_clicked)
         prediction_widget.layout().addWidget(button)
