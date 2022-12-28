@@ -1,5 +1,11 @@
 import numpy as np
 
+import pytest
+import pyopencl as cl
+
+from . import LINUX, CI
+
+@pytest.mark.xfail('LINUX and CI', reason='Segmentation faults only happen on CI', raises=ValueError)
 def test_training(make_napari_viewer):
     viewer = make_napari_viewer()
 
@@ -31,11 +37,11 @@ def test_training(make_napari_viewer):
 
     #Train_object_classifier()(image, labels, labels)
     #Train_object_classifier()(image, labels, labels, "ObjectClassifier.cl", 2, 10, True, True, True, True, True, True, True, True, True, True, True, True, True)
-    #Train_pixel_classifier(image, labels, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
-    #Train_pixel_classifier(image, labels)
-    #Train_object_segmentation(image, labels)
-    #Train_object_segmentation_from_visible_image_layers(labels, napari_viewer=viewer, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
-    #Train_object_segmentation_from_visible_image_layers(labels, napari_viewer=viewer)
+    Train_pixel_classifier(image, labels, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
+    Train_pixel_classifier(image, labels)
+    Train_object_segmentation(image, labels)
+    Train_object_segmentation_from_visible_image_layers(labels, napari_viewer=viewer, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
+    Train_object_segmentation_from_visible_image_layers(labels, napari_viewer=viewer)
     Train_pixel_classifier_from_visible_image_layers(labels, napari_viewer=viewer, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
     Train_pixel_classifier_from_visible_image_layers(labels, napari_viewer=viewer)
     Connected_component_labeling(labels)

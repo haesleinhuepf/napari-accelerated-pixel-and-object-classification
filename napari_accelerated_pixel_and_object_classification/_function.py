@@ -128,7 +128,7 @@ def Train_object_segmentation(
     clf = ObjectSegmenter(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth, positive_class_identifier=annotated_object_intensity)
     clf.train(feature_stack, annotation, [image])
 
-    result = clf.predict(feature_stack, [image])
+    result = clf.predict(features=feature_stack, image=[image])
     return result
 
 
