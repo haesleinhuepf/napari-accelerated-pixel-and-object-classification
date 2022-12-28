@@ -17,7 +17,7 @@ The processed example image was kindly acquired by Daniela Vorkel, Myers lab, MP
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
 Training classifiers from pairs of image and label-mask folders is explained in 
 [this notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/train_on_folders.ipynb).
-For executing APOC classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification).
+For executing APOC's pixel and object classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification). Table classifiers and object mergers are not compatible with Fiji yet.
 
 ![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/screenshot.png)
 
@@ -247,10 +247,14 @@ Linux users please also install this:
 Contributions, feedback and suggestions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
-## Similar napari plugins
-There are other plugins with similar functionality for interactive classification of pixels and objects.
+## Similar software
+There are other napari plugins and other software with similar functionality for interactive classification of pixels and objects.
 
 * [napari-feature-classifier](https://github.com/fractal-napari-plugins-collection/napari-feature-classifier)
+* [napari-buds](https://www.napari-hub.org/plugins/napari-buds)
+* [ilastik](https://www.ilastik.org/)
+* [Fiji's Trainable Weka Segmentation](https://imagej.net/plugins/tws/)
+* [scikit-learn](https://scikit-learn.org/stable/)
 
 ## License
 
