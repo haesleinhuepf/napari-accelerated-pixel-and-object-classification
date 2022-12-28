@@ -20,6 +20,10 @@ def Train_object_merger(image: "napari.types.ImageData",
                         touch_portion: bool = True,
                         touch_count: bool = False,
                         centroid_distance: bool = False,
+                        mean_intensity_difference: bool = False,
+                        standard_deviation_intensity_difference: bool = False,
+                        area_difference: bool = False,
+                        mean_max_distance_to_centroid_ratio_difference: bool = False,
                         show_classifier_statistics=False,
                         viewer : "napari.Viewer" = None
                         ) -> "napari.types.LabelsData":
@@ -34,6 +38,14 @@ def Train_object_merger(image: "napari.types.ImageData",
         features = features + "touch_count,"
     if centroid_distance:
         features = features + "centroid_distance,"
+    if mean_intensity_difference:
+        features = features + "mean_intensity_difference,"
+    if standard_deviation_intensity_difference:
+        features = features + "standard_deviation_intensity_difference,"
+    if area_difference:
+        features = features + "area_difference,"
+    if mean_max_distance_to_centroid_ratio_difference:
+        features = features + "mean_max_distance_to_centroid_ratio_difference,"
 
     # remove first and last comma
     features = features[1:-1]

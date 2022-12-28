@@ -17,7 +17,7 @@ The processed example image was kindly acquired by Daniela Vorkel, Myers lab, MP
 For using the accelerated pixel and object classifiers in python, check out [apoc](https://github.com/haesleinhuepf/apoc).
 Training classifiers from pairs of image and label-mask folders is explained in 
 [this notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/train_on_folders.ipynb).
-For executing APOC classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification).
+For executing APOC's pixel and object classifiers in [Fiji](https://fiji.sc) using [clij2](https://clij.github.io) please read the documentation of the [corresponding Fiji plugin](https://github.com/clij/clijx-accelerated-pixel-and-object-classification). Table classifiers and object mergers are not compatible with Fiji yet.
 
 ![](https://github.com/clij/clijx-accelerated-pixel-and-object-classification/raw/main/docs/screenshot.png)
 
@@ -103,6 +103,10 @@ Select which features should be considered for merging:
 * `touch_count`: The number of pixels where object touch. When using this parameter, make sure that images used for training and prediction have the same voxel size.
 * `mean_touch_intensity`: The mean average intensity between touching objects. When using this parameter, make sure images used for training and prediction are normalized the same way.
 * `centroid_distance`: The distance (in pixels or voxels) between centroids of labeled objects. 
+* `mean_intensity_difference`: The absolute difference between the mean intensity of the two objects. This measurement allows differentiating bright and dark object and [not] mergin them.
+* `standard_deviation_intensity_difference`: The absolute difference between the standard deviation of the two objects. This measurement allows to differentiate [in]homogeneous objects and [not] merge them.
+* `area_difference`: The difference in area/volume/pixel-count allows differentiating small and large objects and [not] merging them.
+* `mean_max_distance_to_centroid_ratio_difference`: This parameter is a shape descriptor, similar to elongation, allowing to differentiate roundish and elongate object and [not] merging them.
 
 Note: most features are recommended to be used in isotropic images only.
 
@@ -243,10 +247,14 @@ Linux users please also install this:
 Contributions, feedback and suggestions are very welcome. Tests can be run with [tox], please ensure
 the coverage at least stays the same before you submit a pull request.
 
-## Similar napari plugins
-There are other plugins with similar functionality for interactive classification of pixels and objects.
+## Similar software
+There are other napari plugins and other software with similar functionality for interactive classification of pixels and objects.
 
 * [napari-feature-classifier](https://github.com/fractal-napari-plugins-collection/napari-feature-classifier)
+* [napari-buds](https://www.napari-hub.org/plugins/napari-buds)
+* [ilastik](https://www.ilastik.org/)
+* [Fiji's Trainable Weka Segmentation](https://imagej.net/plugins/tws/)
+* [scikit-learn](https://scikit-learn.org/stable/)
 
 ## License
 
