@@ -322,7 +322,7 @@ def Apply_object_classification(image: "napari.types.ImageData",
 
 @register_function(menu="Segmentation post-processing > Object selection (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_classification(image: "napari.types.ImageData",
+def Apply_object_selection(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
                              model_filename : str = "ObjectSelector.cl",
                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
