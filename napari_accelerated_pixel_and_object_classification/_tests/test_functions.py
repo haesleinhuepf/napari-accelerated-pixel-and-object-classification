@@ -5,7 +5,7 @@ import pyopencl as cl
 
 from . import LINUX, CI
 
-@pytest.mark.xfail('LINUX and CI', reason='Segmentation faults only happen on CI')
+@pytest.mark.skipif('LINUX and CI', reason='Segmentation faults only happen on CI')
 def test_training(make_napari_viewer):
     viewer = make_napari_viewer()
 
