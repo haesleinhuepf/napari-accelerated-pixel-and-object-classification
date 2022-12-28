@@ -294,22 +294,14 @@ class ObjectSegmentation(QWidget):
         print("Applying / prediction done.")
 
         short_filename = filename.split("/")[-1]
-        self._add_to_viewer("Result of " + short_filename, result, scale)
+        _add_to_viewer(self.viewer, self.classifier_class == ProbabilityMapper, "Result of " + short_filename, result, scale)
 
         if show_classifier_statistics and self.viewer is not None:
             table = QTableWidget()
             update_model_analysis(table, classifier)
             self.viewer.window.add_dock_widget(table)
 
-    def _add_to_viewer(self, name, data, scale=None):
-        try:
-            self.viewer.layers[name].data = data.astype(int)
-            self.viewer.layers[name].visible = True
-        except KeyError:
-            if self.classifier_class == ProbabilityMapper:
-                self.viewer.add_image(data, name=name)
-            else:
-                self.viewer.add_labels(data.astype(int), name=name, scale=scale)
+
 
     def predict(self, images, filename, scale=None):
         print("predict")
@@ -332,7 +324,7 @@ class ObjectSegmentation(QWidget):
 
         short_filename = filename.split("/")[-1]
 
-        self._add_to_viewer("Result of " + short_filename, result, scale=scale)
+        _add_to_viewer(self.viewer, self.classifier_class == ProbabilityMapper, "Result of " + short_filename, result, scale)
 
     def update_memory_consumption(self):
         number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]))
@@ -555,9 +547,10 @@ class FeatureSelector(QWidget):
 def napari_experimental_provide_dock_widget():
     # you can return either a single widget, or a sequence of widgets
     from ._function import Train_object_classifier
+    from ._object_classification_widget import ObjectClassification
     from ._custom_table_row_classifier import CustomObjectClassifierWidget
     from ._object_merger import Train_object_merger
-    return [ObjectSegmentation, SemanticSegmentation, Train_object_classifier, CustomObjectClassifierWidget, Train_object_merger]
+    return [ObjectSegmentation, SemanticSegmentation, CustomObjectClassifierWidget, Train_object_merger, ObjectClassification]
 
 
 def set_border(widget:QWidget, spacing=2, margin=0):
@@ -566,3 +559,12 @@ def set_border(widget:QWidget, spacing=2, margin=0):
     if hasattr(widget.layout(), "setSpacing"):
         widget.layout().setSpacing(spacing)
 
+def _add_to_viewer(viewer, as_image, name, data, scale=None):
+    try:
+        viewer.layers[name].data = data.astype(int)
+        viewer.layers[name].visible = True
+    except KeyError:
+        if as_image:
+            viewer.add_image(data, name=name, scale=scale)
+        else:
+            viewer.add_labels(data.astype(int), name=name, scale=scale)
