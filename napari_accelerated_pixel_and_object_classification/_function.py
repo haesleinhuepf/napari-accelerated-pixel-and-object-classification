@@ -1,4 +1,6 @@
-from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier, ProbabilityMapper
+import warnings
+
+from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier, ObjectSelector, ProbabilityMapper
 
 import numpy as np
 from napari_plugin_engine import napari_hook_implementation
@@ -191,7 +193,7 @@ def Connected_component_labeling(labels: "napari.types.LabelsData", object_class
         instances = cle.connected_components_labeling_box(binary)
     return instances
 
-@register_dock_widget(menu="Segmentation post-processing > Object classification (APOC)")
+@register_dock_widget(menu="Segmentation post-processing > Object classification (deprecated, APOC)")
 @magic_factory(
     model_filename=dict(widget_type='FileEdit', mode='w'),
     shape_extension_ratio=dict(label='shape (extension ratio)')
@@ -223,7 +225,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
                             show_feature_correlation_matrix=False,
                             viewer : "napari.Viewer" = None
                             ) -> "napari.types.LabelsData":
-
+    warnings.warn("This function is deprecated. Use the classes in the APOC package instead.", DeprecationWarning)
     features = ","
     if pixel_count:
         features = features + "area,"
@@ -315,6 +317,17 @@ def Apply_object_classification(image: "napari.types.ImageData",
                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
 
     clf = ObjectClassifier(opencl_filename=model_filename)
+    result = clf.predict(labels, image)
+    return result
+
+@register_function(menu="Segmentation post-processing > Object selection (apply pretrained, APOC)")
+@time_slicer
+def Apply_object_classification(image: "napari.types.ImageData",
+                             labels: "napari.types.LabelsData",
+                             model_filename : str = "ObjectSelector.cl",
+                             viewer: napari.Viewer = None) -> "napari.types.LabelsData":
+
+    clf = ObjectSelector(opencl_filename=model_filename)
     result = clf.predict(labels, image)
     return result
 

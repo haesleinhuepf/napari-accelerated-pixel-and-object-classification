@@ -30,7 +30,7 @@ def test_training(make_napari_viewer):
     viewer.add_labels(labels)
 
     #Train_object_classifier()(image, labels, labels)
-    Train_object_classifier()(image, labels, labels, "ObjectClassifier.cl", 2, 10, True, True, True, True, True, True, True, True, True, True, True, True, True)
+    #Train_object_classifier()(image, labels, labels, "ObjectClassifier.cl", 2, 10, True, True, True, True, True, True, True, True, True, True, True, True, True)
     #Train_pixel_classifier(image, labels, featureset=apoc.PredefinedFeatureSet.custom, custom_features="original")
     #Train_pixel_classifier(image, labels)
     #Train_object_segmentation(image, labels)
