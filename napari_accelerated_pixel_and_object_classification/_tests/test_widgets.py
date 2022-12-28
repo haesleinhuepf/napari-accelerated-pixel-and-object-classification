@@ -102,6 +102,15 @@ def test_surface_vertex_classifier(make_napari_viewer):
 
     viewer.window.add_dock_widget(classifier)
 
+def test_object_merger(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._object_merger import _Train_object_merger
+
+    classifier = _Train_object_merger()
+
+    viewer.window.add_dock_widget(classifier)
+
 def test_feature_selector(make_napari_viewer):
     from napari_accelerated_pixel_and_object_classification._dock_widget import FeatureSelector
 

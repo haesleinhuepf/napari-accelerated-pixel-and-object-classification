@@ -10,7 +10,7 @@ from qtpy.QtWidgets import QTableWidget
 @magic_factory(
     model_filename=dict(widget_type='FileEdit', mode='w'),
 )
-def Train_object_merger(image: "napari.types.ImageData",
+def _Train_object_merger(image: "napari.types.ImageData",
                         labels : "napari.types.LabelsData",
                         annotation : "napari.types.LabelsData",
                         model_filename : "magicgui.types.PathLike" = "LabelMerger.cl",
@@ -27,7 +27,29 @@ def Train_object_merger(image: "napari.types.ImageData",
                         show_classifier_statistics=False,
                         viewer : "napari.Viewer" = None
                         ) -> "napari.types.LabelsData":
+    return Train_object_merger(image, labels, annotation, model_filename, max_depth, num_ensembles,
+                               mean_touch_intensity, touch_portion, touch_count, centroid_distance,
+                               mean_intensity_difference, standard_deviation_intensity_difference,
+                               area_difference, mean_max_distance_to_centroid_ratio_difference,
+                               show_classifier_statistics, viewer)
 
+def Train_object_merger(image: "napari.types.ImageData",
+                         labels: "napari.types.LabelsData",
+                         annotation: "napari.types.LabelsData",
+                         model_filename: "magicgui.types.PathLike" = "LabelMerger.cl",
+                         max_depth: int = 2,
+                         num_ensembles: int = 100,
+                         mean_touch_intensity: bool = True,
+                         touch_portion: bool = True,
+                         touch_count: bool = False,
+                         centroid_distance: bool = False,
+                         mean_intensity_difference: bool = False,
+                         standard_deviation_intensity_difference: bool = False,
+                         area_difference: bool = False,
+                         mean_max_distance_to_centroid_ratio_difference: bool = False,
+                         show_classifier_statistics=False,
+                         viewer: "napari.Viewer" = None
+                         ) -> "napari.types.LabelsData":
 
     features = ","
     if mean_touch_intensity:
