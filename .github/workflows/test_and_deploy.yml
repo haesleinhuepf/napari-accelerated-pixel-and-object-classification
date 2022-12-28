@@ -83,9 +83,13 @@ jobs:
       #  run: tox
       #  env:
       #    PLATFORM: ${{ matrix.platform }}
-      - name: Test
+      - name: Test1
         shell: bash -l {0}
-        run: pytest -v --cov=./ --cov-report=xml
+        run: pytest -v --cov=./ --cov-report=xml -k test_functions
+
+      - name: Test1
+        shell: bash -l {0}
+        run: pytest -v --cov=./ --cov-report=xml -k test_widgets
 
       - name: Coverage
         uses: codecov/codecov-action@v1
