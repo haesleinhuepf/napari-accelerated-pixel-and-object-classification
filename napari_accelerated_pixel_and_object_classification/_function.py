@@ -128,7 +128,7 @@ def Train_object_segmentation(
     clf = ObjectSegmenter(opencl_filename=model_filename, num_ensembles=num_ensembles, max_depth=max_depth, positive_class_identifier=annotated_object_intensity)
     clf.train(feature_stack, annotation, [image])
 
-    result = clf.predict(feature_stack, [image])
+    result = clf.predict(features=feature_stack, image=[image])
     return result
 
 
@@ -322,7 +322,7 @@ def Apply_object_classification(image: "napari.types.ImageData",
 
 @register_function(menu="Segmentation post-processing > Object selection (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_classification(image: "napari.types.ImageData",
+def Apply_object_selection(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
                              model_filename : str = "ObjectSelector.cl",
                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":

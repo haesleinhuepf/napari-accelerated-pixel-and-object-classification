@@ -83,6 +83,34 @@ def test_object_training_and_prediction(make_napari_viewer):
 
     viewer.window.add_dock_widget(classifier)
 
+def test_object_classifier(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._object_classification_widget import ObjectClassification, ObjectSelection
+
+    classifier1 = ObjectClassification(viewer)
+    viewer.window.add_dock_widget(classifier1)
+    classifier2 = ObjectSelection(viewer)
+    viewer.window.add_dock_widget(classifier2)
+
+def test_surface_vertex_classifier(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._surface_vertex_classifier import SurfaceVertexClassifierWidget
+
+    classifier = SurfaceVertexClassifierWidget(viewer)
+
+    viewer.window.add_dock_widget(classifier)
+
+def test_object_merger(make_napari_viewer):
+    viewer = make_napari_viewer()
+
+    from napari_accelerated_pixel_and_object_classification._object_merger import _Train_object_merger
+
+    classifier = _Train_object_merger()
+
+    viewer.window.add_dock_widget(classifier)
+
 def test_feature_selector(make_napari_viewer):
     from napari_accelerated_pixel_and_object_classification._dock_widget import FeatureSelector
 
