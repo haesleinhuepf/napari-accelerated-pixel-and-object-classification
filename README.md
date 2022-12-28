@@ -103,6 +103,10 @@ Select which features should be considered for merging:
 * `touch_count`: The number of pixels where object touch. When using this parameter, make sure that images used for training and prediction have the same voxel size.
 * `mean_touch_intensity`: The mean average intensity between touching objects. When using this parameter, make sure images used for training and prediction are normalized the same way.
 * `centroid_distance`: The distance (in pixels or voxels) between centroids of labeled objects. 
+* `mean_intensity_difference`: The absolute difference between the mean intensity of the two objects. This measurement allows differentiating bright and dark object and [not] mergin them.
+* `standard_deviation_intensity_difference`: The absolute difference between the standard deviation of the two objects. This measurement allows to differentiate [in]homogeneous objects and [not] merge them.
+* `area_difference`: The difference in area/volume/pixel-count allows differentiating small and large objects and [not] merging them.
+* `mean_max_distance_to_centroid_ratio_difference`: This parameter is a shape descriptor, similar to elongation, allowing to differentiate roundish and elongate object and [not] merging them.
 
 Note: most features are recommended to be used in isotropic images only.
 
