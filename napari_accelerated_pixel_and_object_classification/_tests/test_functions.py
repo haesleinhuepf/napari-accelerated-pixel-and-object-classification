@@ -83,10 +83,14 @@ def test_training_without_viewer():
     Train_object_segmentation(image, labels)
     Connected_component_labeling(labels)
     Connected_component_labeling(labels, fill_gaps_between_labels=False)
+
+    from napari_accelerated_pixel_and_object_classification._object_classification_widget import _train_classifier as train_object_classifier
+    train_object_classifier(image, labels, labels, "ObjectClassifier.cl", 2, 100, True, True, True, True, True, True, True, True, True, True, True, True, True,
+                            True, True, True, True, False, None)
     Apply_object_classification(image, labels)
     Apply_pixel_classification(image)
     Apply_object_segmentation(image)
-    Apply_probability_mapper(image)
+    # Apply_probability_mapper(image)
 
 def test_object_segmentation():
 
