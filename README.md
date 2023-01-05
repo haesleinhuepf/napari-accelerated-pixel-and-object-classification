@@ -103,14 +103,14 @@ Select which features should be considered for merging:
 * `touch_count`: The number of pixels where object touch. When using this parameter, make sure that images used for training and prediction have the same voxel size.
 * `mean_touch_intensity`: The mean average intensity between touching objects. When using this parameter, make sure images used for training and prediction are normalized the same way.
 * `centroid_distance`: The distance (in pixels or voxels) between centroids of labeled objects. 
-* `mean_intensity_difference`: The absolute difference between the mean intensity of the two objects. This measurement allows differentiating bright and dark object and [not] mergin them.
+* `mean_intensity_difference`: The absolute difference between the mean intensity of the two objects. This measurement allows differentiating bright and dark object and [not] merging them.
 * `standard_deviation_intensity_difference`: The absolute difference between the standard deviation of the two objects. This measurement allows to differentiate [in]homogeneous objects and [not] merge them.
 * `area_difference`: The difference in area/volume/pixel-count allows differentiating small and large objects and [not] merging them.
 * `mean_max_distance_to_centroid_ratio_difference`: This parameter is a shape descriptor, similar to elongation, allowing to differentiate roundish and elongate object and [not] merging them.
 
 Note: most features are recommended to be used in isotropic images only.
 
-![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/merge_objects1.png)
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/merge_objects.gif)
 
 For training, use an image with equivalized intensity (1), an over-segmented label image (2) and annotations (3). When drawing annotations in a new labels layer, make sure to misguide the algorithm draw on edges of touching objects a 1 if those should be merged and a 2 if they should be kept. Make sure there are no 1/2 annotation circles on both: labels which should be merged and kept.
 
@@ -143,6 +143,14 @@ If classification worked well, it may for example look like this. Note the two t
 ![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/object_classification_result.png)
 
 A pre-trained model can later be applied [from scripts as shown in the example notebook](https://github.com/haesleinhuepf/apoc/blob/main/demo/cell_classification.ipynb) or using the menu `Tools > Segmentation post-processing > Object classification (apply pretrained, APOC)`.
+
+### Object selection
+
+Analogously to object classification, the object selector removes all objects from a label image that do not belong to a specified class.
+It can be found in the menu `Tools > Segmentation post-processing > Object selection (APOC)`. 
+
+![img.png](https://github.com/haesleinhuepf/napari-accelerated-pixel-and-object-classification/raw/main/images/select_objects.gif)
+
 
 ### Feature correlation matrix
 
