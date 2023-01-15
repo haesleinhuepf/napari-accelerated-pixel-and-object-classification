@@ -155,7 +155,7 @@ It can be found in the menu `Tools > Segmentation post-processing > Object selec
 ### Feature correlation matrix
 
 When training object classifiers it is crucial to investigate to which degree features are correlated and select the right, ideally uncorrelated features to classify objects robustly.
-After measuring features with any compatible napari plugin listed below, you can visualize the feature correlation matrix using the menu `Tools > Measurement > Show feature correlation matrix (pandas, APOC)` and by selecting the labels layer which has been analyzed.
+After measuring features with any compatible napari plugin listed below, you can visualize the feature correlation matrix using the menu `Tools > Measurement tables > Show feature correlation matrix (pandas, APOC)` and by selecting the labels layer which has been analyzed.
 Before computing the correlation matrix, all rows containing [NaN](https://en.wikipedia.org/wiki/NaN) values are removed.
 For further details, please refer to the [documentation of the underlying function in pandas](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html).
 
