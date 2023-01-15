@@ -292,7 +292,7 @@ def Train_object_classifier(image: "napari.types.ImageData",
     return result
 
 
-@register_function(menu="Measurement > Feature correlation matrix (pandas, APOC)")
+@register_function(menu="Measurement tables > Feature correlation matrix (pandas, APOC)")
 def show_feature_correlation_matrix(layer: "napari.layers.Layer", viewer:napari.Viewer = None):
     from ._dock_widget import update_table_gui
     import pandas as pd
@@ -331,7 +331,7 @@ def Apply_object_selection(image: "napari.types.ImageData",
     result = clf.predict(labels, image)
     return result
 
-@register_function(menu="Measurement > Annotation to cluster ID column (APOC)")
+@register_function(menu="Measurement tables > Annotation to cluster ID column (APOC)")
 def annotation_to_cluster_id(labels: "napari.types.LabelsData", annotation: "napari.types.LabelsData", name:str="ANNOTATION", viewer:napari.Viewer=None):
     import pyclesperanto_prototype as cle
     import pandas as pd
