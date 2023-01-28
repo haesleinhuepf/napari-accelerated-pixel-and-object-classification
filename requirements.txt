@@ -4,4 +4,4 @@ napari-time-slicer
 superqt
 imageio!=2.22.1
 -e .
-vispy<0.12.0 # https://github.com/napari/napari/issues/5511
+napari>=0.4.11 # https://github.com/napari/napari/issues/5511
