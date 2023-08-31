@@ -327,14 +327,14 @@ class ObjectSegmentation(QWidget):
         _add_to_viewer(self.viewer, self.classifier_class == ProbabilityMapper, "Result of " + short_filename, result, scale)
 
     def update_memory_consumption(self):
-        number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]))
+        number_of_pixels = np.sum(tuple([np.prod(i.shape) for i in self.get_selected_images_data()]), dtype=float)
         number_of_features = len(self.feature_selector.getFeatures().split(" "))
         number_of_bytes_per_pixel = 4
 
         bytes = number_of_pixels * number_of_bytes_per_pixel * number_of_features
-        text = "{bytes:.1f} MBytes".format(bytes=bytes / 1024 / 1024)
+        mega_bytes = bytes / 2**20
         try:
-            self.label_memory_consumption.setText("Estimated memory consumption (GPU): " + text)
+            self.label_memory_consumption.setText(f"Estimated memory consumption (GPU): {mega_bytes:.1f} MBytes")
         except RuntimeError:
             pass
 
