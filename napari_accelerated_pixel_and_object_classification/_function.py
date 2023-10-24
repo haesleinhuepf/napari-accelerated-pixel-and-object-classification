@@ -292,11 +292,12 @@ def Train_object_classifier(image: "napari.types.ImageData",
     return result
 
 
-@register_function(menu="Measurement tables > Feature correlation matrix (pandas, APOC)")
-def show_feature_correlation_matrix(layer: "napari.layers.Layer", viewer:napari.Viewer = None):
+@register_function(menu="Measurement tables > Feature correlation matrix (pandas, APOC)",
+                   method={'choices':['pearson', 'kendall', 'spearman']})
+def show_feature_correlation_matrix(layer: "napari.layers.Layer", method:str='pearson', viewer:napari.Viewer = None):
     from ._dock_widget import update_table_gui
     import pandas as pd
-    correlation_matrix = pd.DataFrame(layer.properties).dropna().corr()
+    correlation_matrix = pd.DataFrame(layer.properties).dropna().corr(method=method)
 
     if viewer is not None:
         table = QTableWidget()
@@ -304,7 +305,7 @@ def show_feature_correlation_matrix(layer: "napari.layers.Layer", viewer:napari.
         table.setRowCount(len(correlation_matrix))
 
         update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
-        viewer.window.add_dock_widget(table, name="Feature correlation matrix")
+        viewer.window.add_dock_widget(table, name=f"Feature {method} correlation matrix")
     else:
         return correlation_matrix
 
