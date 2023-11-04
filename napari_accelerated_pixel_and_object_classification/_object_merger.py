@@ -4,6 +4,8 @@ from magicgui import magic_factory
 from napari_tools_menu import register_function, register_dock_widget
 from apoc import ObjectMerger
 from qtpy.QtWidgets import QTableWidget
+import warnings
+from ._utilities import wrap_api
 
 
 @register_dock_widget(menu="Segmentation post-processing > Merge objects (APOC)")
@@ -89,9 +91,17 @@ def Train_object_merger(image: "napari.types.ImageData",
     return result
 
 
+def Apply_object_merger(image: "napari.types.ImageData",
+                        labels: "napari.types.LabelsData",
+                        model_filename : str = "LabelMerger.cl") -> "napari.types.LabelsData":
+    warnings.warn("Apply_object_merger is deprecated. Use apply_object_merger instead.", DeprecationWarning)
+    return apply_object_merger(image, labels, model_filename)
+
+
 @register_function(menu="Segmentation post-processing > Merge objects (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_merger(image: "napari.types.ImageData",
+@wrap_api
+def apply_object_merger(image: "napari.types.ImageData",
                         labels: "napari.types.LabelsData",
                         model_filename : str = "LabelMerger.cl") -> "napari.types.LabelsData":
 

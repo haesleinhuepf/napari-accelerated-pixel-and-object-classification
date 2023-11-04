@@ -10,6 +10,7 @@ from napari_time_slicer import time_slicer
 from napari_tools_menu import register_function, register_dock_widget
 from magicgui import magic_factory
 from ._object_merger import Train_object_merger, Apply_object_merger
+from ._utilities import wrap_api
 
 from qtpy.QtWidgets import QTableWidget
 
@@ -28,6 +29,10 @@ def napari_experimental_provide_function():
         Apply_pixel_classification_to_visible_image_layers,
         Connected_component_labeling, Apply_object_classification,
         Apply_object_merger]
+
+
+
+
 
 def Train_pixel_classifier(
         image: "napari.types.ImageData",
@@ -68,16 +73,22 @@ def Train_probability_mapper(
     result = clf.predict(features=feature_stack, image=image)
     return result
 
+
+def Apply_pixel_classification(image: "napari.types.ImageData",
+                               model_filename : str = "PixelClassifier.cl",
+                               viewer: napari.Viewer = None) -> "napari.types.LabelsData":
+    warnings.warn("Apply_pixel_classification is deprecated use apply_pixel_classification instead.", DeprecationWarning)
+    return apply_pixel_classification(image, model_filename, viewer)
+
 @register_function(menu="Segmentation / labeling > Semantic segmentation (apply pretrained, APOC)")
 @time_slicer
-def Apply_pixel_classification(image: "napari.types.ImageData",
+@wrap_api
+def apply_pixel_classification(image: "napari.types.ImageData",
                                model_filename : str = "PixelClassifier.cl",
                                viewer: napari.Viewer = None) -> "napari.types.LabelsData":
 
     clf = PixelClassifier(opencl_filename=model_filename)
-    print("Hello world")
     result = clf.predict(image=[image])
-    print("Result is ", result.shape, result.dtype)
     return result
 
 def Train_pixel_classifier_from_visible_image_layers(
@@ -132,9 +143,17 @@ def Train_object_segmentation(
     return result
 
 
+def Apply_probability_mapper(image: "napari.types.ImageData",
+                              model_filename : str = "ProbabilityMapper.cl",
+                              viewer: napari.Viewer = None) -> "napari.types.ImageData":
+    warnings.warn("Apply_probability_mapper is deprecated use apply_probability_mapper instead.", DeprecationWarning)
+    return apply_probability_mapper(image, model_filename, viewer)
+
+
 @register_function(menu="Filtering > Probability Mapper (apply pretrained, APOC)")
 @time_slicer
-def Apply_probability_mapper(image: "napari.types.ImageData",
+@wrap_api
+def apply_probability_mapper(image: "napari.types.ImageData",
                               model_filename : str = "ProbabilityMapper.cl",
                               viewer: napari.Viewer = None) -> "napari.types.ImageData":
     clf = ProbabilityMapper(opencl_filename=model_filename)
@@ -142,9 +161,17 @@ def Apply_probability_mapper(image: "napari.types.ImageData",
     return result
 
 
+def Apply_object_segmentation(image: "napari.types.ImageData",
+                              model_filename: str = "ObjectSegmenter.cl",
+                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
+    warnings.warn("Apply_object_segmentation is deprecated use apply_object_segmentation instead.",
+                  DeprecationWarning)
+    return apply_object_segmentation(image, model_filename, viewer)
+
 @register_function(menu="Segmentation / labeling > Object segmentation (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_segmentation(image: "napari.types.ImageData",
+@wrap_api
+def apply_object_segmentation(image: "napari.types.ImageData",
                               model_filename : str = "ObjectSegmenter.cl",
                               viewer: napari.Viewer = None) -> "napari.types.LabelsData":
     clf = ObjectSegmenter(opencl_filename=model_filename)
@@ -288,7 +315,6 @@ def Train_object_classifier(image: "napari.types.ImageData",
             update_model_analysis(table, clf)
             viewer.window.add_dock_widget(table, name="Classifier statistics")
 
-
     return result
 
 
@@ -310,9 +336,18 @@ def show_feature_correlation_matrix(layer: "napari.layers.Layer", method:str='pe
         return correlation_matrix
 
 
+def Apply_object_classification(image: "napari.types.ImageData",
+                             labels: "napari.types.LabelsData",
+                             model_filename : str = "ObjectClassifier.cl",
+                             viewer: napari.Viewer = None) -> "napari.types.LabelsData":
+    warnings.warn("Apply_object_classification is deprecated use apply_object_classification instead.", DeprecationWarning)
+    return apply_object_classification(image, labels, model_filename, viewer)
+
+
 @register_function(menu="Segmentation post-processing > Object classification (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_classification(image: "napari.types.ImageData",
+@wrap_api
+def apply_object_classification(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
                              model_filename : str = "ObjectClassifier.cl",
                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
@@ -321,9 +356,18 @@ def Apply_object_classification(image: "napari.types.ImageData",
     result = clf.predict(labels, image)
     return result
 
+
+def Apply_object_selection(image: "napari.types.ImageData",
+                             labels: "napari.types.LabelsData",
+                             model_filename : str = "ObjectSelector.cl",
+                             viewer: napari.Viewer = None) -> "napari.types.LabelsData":
+    warnings.warn("Apply_object_selection is deprecated use apply_object_selection instead.", DeprecationWarning)
+    apply_object_selection(image, labels, model_filename, viewer)
+
 @register_function(menu="Segmentation post-processing > Object selection (apply pretrained, APOC)")
 @time_slicer
-def Apply_object_selection(image: "napari.types.ImageData",
+@wrap_api
+def apply_object_selection(image: "napari.types.ImageData",
                              labels: "napari.types.LabelsData",
                              model_filename : str = "ObjectSelector.cl",
                              viewer: napari.Viewer = None) -> "napari.types.LabelsData":
