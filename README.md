@@ -231,8 +231,10 @@ Optional: Setup a fresh conda environment, activate it and install napari:
 ```
 conda create --name napari_apoc python=3.9
 conda activate napari_apoc
-conda install napari
+conda install "napari<0.6.0"
 ```
+
+Note: This plugin is not compatible with napari 0.6.0 and later.
 
 If your conda environment is set up, you can install `napari-accelerated-pixel-and-object-classification` using [pip]. Note: you need [pyopencl](https://documen.tician.de/pyopencl/) first.
 
