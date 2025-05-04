@@ -1,6 +1,8 @@
 import warnings
 
-from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier, ObjectSelector, ProbabilityMapper
+import pandas as pd
+from apoc import PredefinedFeatureSet, PixelClassifier, ObjectSegmenter, ObjectClassifier, ObjectSelector, \
+    ProbabilityMapper, TableRowClassifier
 
 import numpy as np
 from napari_plugin_engine import napari_hook_implementation
@@ -9,6 +11,7 @@ import napari
 from napari_time_slicer import time_slicer
 from napari_tools_menu import register_function, register_dock_widget
 from magicgui import magic_factory
+from ._custom_table_row_classifier import add_column_to_layer_tabular_data, get_layer_tabular_data
 from ._object_merger import Train_object_merger, Apply_object_merger
 from ._utilities import wrap_api
 
@@ -355,6 +358,67 @@ def apply_object_classification(image: "napari.types.ImageData",
     clf = ObjectClassifier(opencl_filename=model_filename)
     result = clf.predict(labels, image)
     return result
+
+
+@register_function(menu="Segmentation post-processing > Custom object classification (apply pretrained, APOC)")
+@time_slicer
+@wrap_api
+def Apply_custom_object_classifier(
+        labels: "napari.types.LabelsData",
+        model_filename: "magicgui.types.PathLike",
+        show_results_as_table: bool = False,
+        show_classifier_statistics: bool = False,
+        show_correlation_matrix: bool = False,
+        viewer: napari.Viewer = None
+) -> "napari.types.LabelsData":
+    """Apply a trained custom object classifier using selected measurements."""
+
+    from napari_workflows._workflow import _get_layer_from_data
+    labels_layer = _get_layer_from_data(viewer, labels)
+
+    print("Selected labels layer: " + str(labels_layer))
+    features = get_layer_tabular_data(labels_layer)
+    if features is None:
+        warnings.warn("No features found in labels layer!")
+        return None
+
+    clf = TableRowClassifier(opencl_filename=model_filename)
+    selected_properties = features[clf.ordered_feature_names]
+    print("selected properties", selected_properties)
+
+    prediction = clf.predict(selected_properties)
+    print("RFC predictions finished.")
+
+    # write result back to features/properties of the labels layer
+    add_column_to_layer_tabular_data(labels_layer, "CLUSTER_ID", prediction)
+
+    import pyclesperanto_prototype as cle
+    predicted_labels = np.asarray(cle.replace_intensities(labels, [0] + prediction))
+
+    if show_results_as_table and viewer is not None:
+        # show region properties table as a new widget
+        from napari_skimage_regionprops import add_table
+        add_table(labels_layer, viewer)
+
+    if show_classifier_statistics and viewer is not None:
+
+        from ._dock_widget import update_model_analysis
+        table = QTableWidget()
+        update_model_analysis(table, clf)
+        viewer.window.add_dock_widget(table, name="Classifier statistics")
+
+    if show_correlation_matrix and viewer is not None:
+        table = QTableWidget()
+        from ._dock_widget import update_table_gui
+        correlation_matrix = pd.DataFrame(selected_properties).dropna().corr()
+
+        table.setColumnCount(len(correlation_matrix))
+        table.setRowCount(len(correlation_matrix))
+
+        update_table_gui(table, correlation_matrix, minimum_value=-1, maximum_value=1)
+        viewer.window.add_dock_widget(table, name="Correlation matrix")
+
+    return predicted_labels.astype(int)
 
 
 def Apply_object_selection(image: "napari.types.ImageData",
